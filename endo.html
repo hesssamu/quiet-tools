@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Understanding what she lives with</title>
+<style>
+  :root{
+    --bg:#1c1b22; --bg2:#26242e; --ink:#F3EDE6; --muted:#A89FB0;
+    --rose:#E0879A; --rose-deep:#C5617A; --warm:#E8B06B; --teal:#7FB7B0; --sage:#9BBE96;
+    --womb:#3a2f3d; --lining:#E0879A; --blob:#D17A8E;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%}
+  body{background:radial-gradient(1000px 700px at 50% 0%,#2a2833 0%,var(--bg) 70%);color:var(--ink);
+       font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow:hidden}
+  .app{height:100dvh;display:flex;flex-direction:column;max-width:680px;margin:0 auto;padding:0 20px}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 0 4px;flex:none}
+  .count{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .dots{display:flex;gap:6px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#48434f;transition:.25s;cursor:pointer}
+  .dot.on{background:var(--rose);transform:scale(1.3)}
+
+  .stagewrap{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+  .chapter{display:none;flex-direction:column;align-items:center;text-align:center;animation:rise .5s ease both}
+  .chapter.active{display:flex}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .stage{width:100%;max-width:340px;height:300px;position:relative;margin:0 auto 6px;display:flex;align-items:center;justify-content:center}
+  .copy{max-width:520px}
+  .ch-title{font-family:var(--serif);font-size:27px;font-weight:600;margin:6px 0 8px;line-height:1.18}
+  .ch-text{font-size:16.5px;color:#E8E0EA;margin:0 auto}
+  .ch-text.small{font-size:14px;color:var(--muted);margin-top:12px}
+  .ch-text b{color:var(--warm);font-weight:600}
+  .ch-text .rose{color:var(--rose)}
+
+  .nav{flex:none;display:flex;align-items:center;justify-content:space-between;padding:14px 0 22px;gap:12px}
+  .btn{border:none;cursor:pointer;font-family:var(--sans);font-weight:600;font-size:16px;border-radius:14px;padding:14px 26px;transition:.15s}
+  .btn.primary{background:var(--rose);color:#2a1b22;flex:1;max-width:260px;margin:0 auto}
+  .btn.primary:hover{background:var(--rose-deep)}
+  .btn.ghost{background:transparent;color:var(--muted);padding:14px 8px}
+  .btn.ghost:disabled{opacity:0;pointer-events:none}
+
+  /* ============ shared shapes ============ */
+  .womb{width:150px;height:150px;border-radius:46% 46% 50% 50%/52% 52% 48% 48%;background:var(--womb);
+        position:relative;box-shadow:inset 0 -8px 24px rgba(0,0,0,.35);overflow:hidden}
+  .lining{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(var(--rose),var(--rose-deep));border-radius:50% 50% 0 0/100% 100% 0 0}
+
+  /* ch1 pulse */
+  .heart{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--rose),var(--rose-deep));
+         animation:softpulse 2.6s ease-in-out infinite;box-shadow:0 0 60px rgba(224,135,154,.35)}
+  @keyframes softpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+  /* ch2 normal cycle */
+  .ch2 .lining{animation:thicken 5s ease-in-out infinite}
+  @keyframes thicken{0%{height:10%}40%{height:42%}55%{height:42%}70%{height:8%}100%{height:10%}}
+  .ch2 .drop{position:absolute;width:9px;height:12px;background:var(--rose-deep);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;bottom:34%;opacity:0}
+  .ch2 .drop{animation:fall 5s ease-in infinite}
+  .ch2 .drop:nth-child(3){left:38%;animation-delay:.2s}
+  .ch2 .drop:nth-child(4){left:50%;animation-delay:.45s}
+  .ch2 .drop:nth-child(5){left:60%;animation-delay:.7s}
+  @keyframes fall{0%,58%{opacity:0;transform:translateY(0)}62%{opacity:1}80%{opacity:1;transform:translateY(60px)}88%{opacity:0;transform:translateY(80px)}100%{opacity:0}}
+
+  /* ch3 wrong rooms */
+  .organfield{position:relative;width:300px;height:280px}
+  .center-womb{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%)}
+  .center-womb .womb{width:96px;height:96px}
+  .blob{position:absolute;left:50%;top:46%;width:26px;height:22px;background:var(--blob);border-radius:60% 40% 55% 45%/55% 55% 45% 45%;
+        transform:translate(-50%,-50%);opacity:0;box-shadow:0 0 0 rgba(209,122,142,.6)}
+  .ch3 .blob{animation:drift 3.4s ease-out forwards}
+  .ch3 .blob:nth-child(2){animation-delay:.5s}
+  .ch3 .blob:nth-child(3){animation-delay:1.0s}
+  .ch3 .blob:nth-child(4){animation-delay:1.5s}
+  .ch3 .blob:nth-child(5){animation-delay:2.0s}
+  @keyframes drift{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}30%{opacity:1}
+    100%{opacity:1;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1)}}
+  .label{position:absolute;font-size:11px;color:var(--muted);transform:translate(-50%,-50%);white-space:nowrap;opacity:0;animation:fadein .6s ease forwards;animation-delay:2.6s}
+  @keyframes fadein{to{opacity:1}}
+
+  /* ch4 trapped, swell + bleed, no exit */
+  .ch4 .blob{opacity:1;animation:swell 2.4s ease-in-out infinite}
+  @keyframes swell{0%,100%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1);background:var(--blob)}
+    50%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1.4);background:#b23a55;box-shadow:0 0 22px rgba(200,50,80,.6)}}
+  .ch4 .tdrop{position:absolute;left:50%;top:46%;width:7px;height:9px;background:#b23a55;border-radius:50%;opacity:0;animation:bleedstuck 2.4s ease-in-out infinite}
+  @keyframes bleedstuck{0%,40%{opacity:0}55%{opacity:.9;transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty)))}
+    100%{opacity:.5;transform:translate(calc(-50% + var(--tx) + var(--jx)),calc(-50% + var(--ty) + var(--jy)))}}
+
+  /* ch5 fire + glue */
+  .flame{position:absolute;left:50%;top:46%;width:14px;height:20px;background:linear-gradient(var(--warm),#d9533a);
+         border-radius:50% 50% 50% 50%/60% 60% 40% 40%;transform-origin:bottom center;opacity:.9;
+         animation:flick .7s ease-in-out infinite alternate}
+  @keyframes flick{from{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scaleY(.85) rotate(-4deg)}
+    to{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scaleY(1.15) rotate(4deg)}}
+  .glue{position:absolute;left:50%;top:46%;height:3px;background:repeating-linear-gradient(90deg,#9a8f86,#9a8f86 5px,transparent 5px,transparent 9px);
+        transform-origin:left center;transform:translate(-50%,-50%) rotate(var(--rot)) scaleX(0);animation:tighten 2.2s ease-out forwards}
+  @keyframes tighten{to{transform:translate(-50%,-50%) rotate(var(--rot)) scaleX(1)}}
+
+  /* ch6 chameleon / years */
+  .calendar{width:150px;height:160px;background:var(--bg2);border-radius:18px;border:2px solid #3c3946;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  .calendar .top{height:34px;background:var(--rose-deep);display:flex;align-items:center;justify-content:center;color:#2a1b22;font-weight:700;font-size:12px;letter-spacing:.1em}
+  .yearnum{font-family:var(--serif);font-size:58px;font-weight:700;color:var(--rose);text-align:center;margin-top:18px;transition:.1s}
+  .yearlbl{font-size:12px;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase}
+
+  /* ch7 endobelly */
+  .belly-scene{display:flex;align-items:center;gap:26px}
+  .belly{width:130px;height:150px;background:linear-gradient(#3a3540,#2c2832);border-radius:46% 46% 50% 50%/40% 40% 60% 60%;position:relative}
+  .belly .bump{position:absolute;left:50%;bottom:14%;transform:translateX(-50%);width:78px;height:64px;
+       background:radial-gradient(circle at 50% 40%,var(--rose),var(--rose-deep));border-radius:50%;
+       animation:inflate 5s ease-in-out infinite}
+  @keyframes inflate{0%,100%{transform:translateX(-50%) scale(.6)}50%{transform:translateX(-50%) scale(1.25)}}
+  .moon{width:54px;height:54px;border-radius:50%;background:#3c3946;position:relative;overflow:hidden;box-shadow:inset -18px 0 0 0 var(--rose) }
+  .moon{animation:phase 5s linear infinite}
+  @keyframes phase{0%{box-shadow:inset 40px 0 0 0 #3c3946}50%{box-shadow:inset -22px 0 0 0 var(--rose)}100%{box-shadow:inset 40px 0 0 0 #3c3946}}
+
+  /* ch8 microbiome balance */
+  .scale{position:relative;width:240px;height:170px}
+  .beam{position:absolute;top:40px;left:50%;width:200px;height:8px;background:var(--muted);border-radius:4px;transform:translateX(-50%) rotate(0deg);transform-origin:center;animation:tip 4s ease-in-out infinite}
+  @keyframes tip{0%,100%{transform:translateX(-50%) rotate(-9deg)}50%{transform:translateX(-50%) rotate(9deg)}}
+  .post{position:absolute;top:40px;left:50%;width:6px;height:90px;background:var(--muted);transform:translateX(-50%)}
+  .pan{position:absolute;top:46px;width:64px;height:44px;border-radius:0 0 40px 40px;display:flex;align-items:center;justify-content:center;font-size:22px}
+  .pan.l{left:8px;background:rgba(155,190,150,.16);border:1px solid var(--sage);animation:panl 4s ease-in-out infinite}
+  .pan.r{right:8px;background:rgba(217,83,58,.16);border:1px solid #d9533a;animation:panr 4s ease-in-out infinite}
+  @keyframes panl{0%,100%{transform:translateY(-16px)}50%{transform:translateY(16px)}}
+  @keyframes panr{0%,100%{transform:translateY(16px)}50%{transform:translateY(-16px)}}
+  .recycle{position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:12px;color:var(--warm)}
+
+  /* ch9 invisible: two figures crossfade */
+  .figs{position:relative;width:200px;height:240px}
+  .fig{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:120px;border-radius:24px}
+  .fig.calm{background:rgba(127,183,176,.12)}
+  .fig.storm{background:rgba(178,58,85,.16);animation:flickbg 1.6s ease-in-out infinite}
+  .ch9 .fig.calm{animation:cf1 5s ease-in-out infinite}
+  .ch9 .fig.storm{animation:cf2 5s ease-in-out infinite}
+  @keyframes cf1{0%,40%{opacity:1}60%,90%{opacity:0}100%{opacity:1}}
+  @keyframes cf2{0%,40%{opacity:0}60%,90%{opacity:1}100%{opacity:0}}
+  @keyframes flickbg{0%,100%{box-shadow:inset 0 0 30px rgba(217,83,58,.2)}50%{box-shadow:inset 0 0 60px rgba(217,83,58,.5)}}
+  .figcap{position:absolute;bottom:8px;left:0;right:0;font-size:12px;color:var(--muted)}
+
+  /* ch10 help list */
+  .helps{list-style:none;padding:0;margin:0;text-align:left;max-width:430px}
+  .helps li{display:flex;gap:12px;align-items:flex-start;background:var(--bg2);border:1px solid #383541;border-radius:14px;
+            padding:13px 15px;margin-bottom:9px;font-size:15px;opacity:0;transform:translateX(-10px)}
+  .ch10.active .helps li{animation:slidein .5s ease forwards}
+  .ch10.active .helps li:nth-child(1){animation-delay:.1s}
+  .ch10.active .helps li:nth-child(2){animation-delay:.3s}
+  .ch10.active .helps li:nth-child(3){animation-delay:.5s}
+  .ch10.active .helps li:nth-child(4){animation-delay:.7s}
+  .ch10.active .helps li:nth-child(5){animation-delay:.9s}
+  @keyframes slidein{to{opacity:1;transform:none}}
+  .helps .ic{font-size:22px;flex:none;line-height:1.2}
+  .helps b{color:var(--warm)}
+  .endlink{display:inline-block;margin-top:6px;color:var(--rose);font-size:14px}
+  .disc{font-size:12px;color:#6f6877;margin-top:16px;max-width:460px}
+  @media(max-height:680px){.stage{height:220px}.ch-title{font-size:23px}.ch-text{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <span class="count" id="count">1 / 10</span>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <div class="stagewrap" id="stagewrap">
+
+    <!-- 1 INTRO -->
+    <section class="chapter ch1 active">
+      <div class="stage"><div class="heart"></div></div>
+      <div class="copy">
+        <h2 class="ch-title">What Hellen lives with</h2>
+        <p class="ch-text">Endometriosis, explained as simply as I can. Tap through slowly, no rush.</p>
+        <p class="ch-text small">A gentle, simple explanation, not a medical guide. Her doctors know her body best.</p>
+      </div>
+    </section>
+
+    <!-- 2 NORMAL -->
+    <section class="chapter ch2">
+      <div class="stage">
+        <div class="womb"><div class="lining"></div><span class="drop"></span><span class="drop"></span><span class="drop"></span></div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">First, the normal monthly thing</h2>
+        <p class="ch-text">Every month the inside of the womb grows a soft, cozy lining, like fresh wallpaper, getting ready in case a baby comes. If none does, the wallpaper comes loose and leaves the body. That's a period. Totally normal.</p>
+      </div>
+    </section>
+
+    <!-- 3 WRONG ROOMS -->
+    <section class="chapter ch3">
+      <div class="stage">
+        <div class="organfield">
+          <div class="center-womb"><div class="womb"></div></div>
+          <span class="blob" style="--tx:-110px;--ty:-90px"></span>
+          <span class="blob" style="--tx:115px;--ty:-70px"></span>
+          <span class="blob" style="--tx:-120px;--ty:70px"></span>
+          <span class="blob" style="--tx:120px;--ty:80px"></span>
+          <span class="label" style="left:50%;top:46%">womb</span>
+        </div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">Now the wrong rooms</h2>
+        <p class="ch-text">With endometriosis, tiny pieces of that <span class="rose">same kind of lining</span> grow in the wrong places, <b>outside</b> the womb. On the ovaries, the bowel, the wall of the belly. They were never supposed to be there.</p>
+      </div>
+    </section>
+
+    <!-- 4 TRAP -->
+    <section class="chapter ch4">
+      <div class="stage">
+        <div class="organfield">
+          <div class="center-womb"><div class="womb"></div></div>
+          <span class="blob" style="--tx:-110px;--ty:-90px"></span>
+          <span class="blob" style="--tx:115px;--ty:-70px"></span>
+          <span class="blob" style="--tx:-120px;--ty:70px"></span>
+          <span class="blob" style="--tx:120px;--ty:80px"></span>
+          <span class="tdrop" style="--tx:-110px;--ty:-72px;--jx:-8px;--jy:14px"></span>
+          <span class="tdrop" style="--tx:115px;--ty:-52px;--jx:8px;--jy:14px"></span>
+          <span class="tdrop" style="--tx:-120px;--ty:88px;--jx:-6px;--jy:12px"></span>
+          <span class="tdrop" style="--tx:120px;--ty:98px;--jx:7px;--jy:12px"></span>
+        </div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">Here's the cruel part</h2>
+        <p class="ch-text">Those stray pieces still "hear" the monthly hormone signal, so they swell and bleed too, <b>every single month</b>. But outside the womb, the blood has <span class="rose">no way out</span>. It's like a tiny wound that reopens every month and can never get air to heal.</p>
+      </div>
+    </section>
+
+    <!-- 5 FIRE + GLUE -->
+    <section class="chapter ch5">
+      <div class="stage">
+        <div class="organfield">
+          <div class="center-womb"><div class="womb"></div></div>
+          <span class="blob" style="--tx:-110px;--ty:-90px;opacity:1"></span>
+          <span class="blob" style="--tx:115px;--ty:-70px;opacity:1"></span>
+          <span class="blob" style="--tx:-120px;--ty:70px;opacity:1"></span>
+          <span class="flame" style="--tx:-110px;--ty:-104px"></span>
+          <span class="flame" style="--tx:115px;--ty:-84px"></span>
+          <span class="flame" style="--tx:-120px;--ty:56px"></span>
+          <span class="glue" style="--rot:38deg;width:150px"></span>
+          <span class="glue" style="--rot:-32deg;width:160px"></span>
+        </div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">Tiny fires, and glue</h2>
+        <p class="ch-text">Trapped blood irritates everything around it. The body lights <b>tiny fires</b> (inflammation) to deal with it, and that hurts. Over time it leaves scars that <span class="rose">glue organs together</span>, things that should slide freely get stuck. More pain, sometimes for days.</p>
+      </div>
+    </section>
+
+    <!-- 6 CHAMELEON -->
+    <section class="chapter ch6">
+      <div class="stage">
+        <div class="calendar"><div class="top">DIAGNOSE</div><div class="yearnum" id="yearnum">1</div><div class="yearlbl">years waiting</div></div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">And it hides (the chameleon)</h2>
+        <p class="ch-text">The signs look like so many other things, so women are often told <span class="rose">"it's just a bad period."</span> In Germany it takes <b>6 to 8 years on average</b> to even get the right diagnosis. Years of real pain and not being believed. It is <b>not</b> just period pain.</p>
+      </div>
+    </section>
+
+    <!-- 7 ENDOBELLY -->
+    <section class="chapter ch7">
+      <div class="stage">
+        <div class="belly-scene">
+          <div class="belly"><div class="bump"></div></div>
+          <div class="moon"></div>
+        </div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">The "Endobelly"</h2>
+        <p class="ch-text">Many days her belly swells up like a balloon, sometimes she looks pregnant. It's so common it has a name: the <span class="rose">Endobelly</span>. Usually worst in the second half of her cycle. This is the condition, <b>not</b> something she ate or did wrong.</p>
+      </div>
+    </section>
+
+    <!-- 8 MICROBIOME -->
+    <section class="chapter ch8">
+      <div class="stage">
+        <div class="scale">
+          <div class="post"></div>
+          <div class="beam"></div>
+          <div class="pan l">🌿</div>
+          <div class="pan r">🔥</div>
+          <div class="recycle">↺ recycles the hormone that feeds it</div>
+        </div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">The tiny helpers in her belly</h2>
+        <p class="ch-text">Her gut is full of tiny helpers (bacteria). When they fall <span class="rose">out of balance</span>, they can recycle the hormone that feeds the stray pieces, and make the gut leaky and inflamed. More fuel, more fire. That's why <b>gentle, anti-inflammatory food really can help her feel better.</b></p>
+      </div>
+    </section>
+
+    <!-- 9 INVISIBLE -->
+    <section class="chapter ch9">
+      <div class="stage">
+        <div class="figs">
+          <div class="fig calm">🙂</div>
+          <div class="fig storm">🌀</div>
+          <div class="figcap">same moment, inside vs outside</div>
+        </div>
+      </div>
+      <div class="copy">
+        <h2 class="ch-title">The part nobody sees</h2>
+        <p class="ch-text">From the outside she can look completely fine. Smiling, working, normal. Inside it can be a storm. That gap, <span class="rose">looking okay while hurting</span>, is one of the loneliest parts. There's no cure yet, but it can be managed. It's not in her head. It's real.</p>
+      </div>
+    </section>
+
+    <!-- 10 HELP -->
+    <section class="chapter ch10">
+      <div class="copy" style="max-width:480px">
+        <h2 class="ch-title">So, how you actually help her</h2>
+        <ul class="helps">
+          <li><span class="ic">💗</span><span><b>Believe her, always.</b> Never minimize. "It's just cramps" is the one thing to never say.</span></li>
+          <li><span class="ic">🔥</span><span><b>Warmth.</b> A heat pad or Wärmflasche on a bad day is real medicine.</span></li>
+          <li><span class="ic">🍲</span><span><b>Gentle food on flare days.</b> Small, warm, anti-inflammatory. <a class="endlink" href="meals.html">Her meal helper is built for exactly this →</a></span></li>
+          <li><span class="ic">🛋️</span><span><b>Rest without guilt.</b> The bloating and tiredness aren't laziness.</span></li>
+          <li><span class="ic">🤍</span><span><b>Be there on the hard days. Reliably.</b> That's the one that matters most.</span></li>
+        </ul>
+        <p class="ch-text" style="margin-top:14px">Now you understand the thing she carries quietly. That understanding, by itself, is a kind of medicine.</p>
+        <p class="disc">Simplified from the book she's reading plus general medical understanding. Endometriosis is complex and individual, this is to help you understand and support her, not to diagnose or treat. Her doctors know her case.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav">
+    <button class="btn ghost" id="prev" disabled>&larr; zurück</button>
+    <button class="btn primary" id="next">Weiter</button>
+    <button class="btn ghost" id="spacer" style="visibility:hidden">&nbsp;</button>
+  </div>
+</div>
+
+<script>
+  const chapters=[...document.querySelectorAll('.chapter')];
+  const N=chapters.length;
+  let i=0;
+  const dotsEl=document.getElementById('dots');
+  chapters.forEach((_,k)=>{const d=document.createElement('div');d.className='dot'+(k===0?' on':'');d.onclick=()=>go(k);dotsEl.appendChild(d);});
+  const dots=[...dotsEl.children];
+  const prev=document.getElementById('prev'),next=document.getElementById('next'),count=document.getElementById('count');
+
+  let yearTimer;
+  function go(n){
+    n=Math.max(0,Math.min(N-1,n));
+    chapters[i].classList.remove('active');
+    i=n;
+    chapters[i].classList.add('active');
+    dots.forEach((d,k)=>d.classList.toggle('on',k===i));
+    count.textContent=(i+1)+' / '+N;
+    prev.disabled=i===0;
+    next.textContent=i===N-1?'Von vorne':'Weiter';
+    // chapter 6 (index 5): count the years up
+    clearInterval(yearTimer);
+    if(i===5){const el=document.getElementById('yearnum');let y=1;el.textContent='1';
+      yearTimer=setInterval(()=>{y++;if(y>8){y=1;}el.textContent=y;},520);}
+    window.scrollTo(0,0);
+  }
+  next.onclick=()=>{ if(i===N-1) go(0); else go(i+1); };
+  prev.onclick=()=>go(i-1);
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(i+1);if(e.key==='ArrowLeft')go(i-1);});
+  // swipe
+  let sx=0;
+  document.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+  document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50){dx<0?go(i+1):go(i-1);}},{passive:true});
+</script>
+</body>
+</html>
