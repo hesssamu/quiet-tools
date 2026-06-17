@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dein eigenes Claude Code, sicher eingerichtet</title>
+<style>
+  :root{
+    --bg:#FBF6F0; --card:#FFFFFF; --ink:#3A322E; --muted:#8A7E76;
+    --clay:#C2826A; --clay-dark:#A86A53; --sage:#8FA68E;
+    --line:#ECE3D9; --soft:#F4ECE3; --code:#2E2A27;
+    --shadow:0 6px 24px rgba(120,90,70,.09);
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:22px 18px 90px}
+  .backlink{display:inline-block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:6px}
+  .backlink:hover{color:var(--clay)}
+  header.top{text-align:center;padding:12px 0 8px}
+  .kicker{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay);font-weight:600}
+  h1{font-family:var(--serif);font-weight:600;font-size:31px;margin:8px 0 6px}
+  .sub{color:var(--muted);max-width:560px;margin:0 auto;font-size:16px}
+
+  .step{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:23px 23px;margin:15px 0}
+  .step.safety{border-color:#E7CFC2;background:#FFFCFA}
+  .step.panic{border-color:#E6CDCD;background:#FEFAFA}
+  .step-head{display:flex;align-items:flex-start;gap:13px}
+  .num{flex:none;width:33px;height:33px;border-radius:50%;background:var(--clay);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .safety .num{background:var(--sage)}
+  .panic .num{background:#C58A8A}
+  .step h2{font-family:var(--serif);font-size:21px;margin:2px 0 0;font-weight:600}
+  .step .t{font-size:15px;margin:10px 0 0}
+  .step .t.muted{color:var(--muted)}
+  ul.clean{margin:10px 0 0;padding-left:20px;font-size:15px}
+  ul.clean li{margin:5px 0}
+
+  .code{position:relative;background:var(--code);color:#F4ECE3;border-radius:12px;margin:13px 0 4px;overflow:hidden}
+  .code pre{margin:0;padding:15px 16px;padding-right:62px;font-family:var(--mono);font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+  .code .copy{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);color:#fff;border:none;font-size:12px;font-weight:600;padding:6px 11px;border-radius:8px;cursor:pointer;font-family:var(--sans)}
+  .code .copy:hover{background:rgba(255,255,255,.22)}
+  .code .copy.done{background:var(--sage)}
+
+  details.explain{margin-top:11px;border-top:1px dashed var(--line);padding-top:9px}
+  details.explain summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--clay);list-style:none}
+  details.explain summary::-webkit-details-marker{display:none}
+  details.explain summary:before{content:"💡 "}
+  details.explain .body{font-size:14px;color:var(--muted);margin-top:8px}
+  details.explain .body b{color:var(--ink)}
+
+  .callout{border-radius:14px;padding:14px 16px;font-size:14px;margin-top:13px;line-height:1.55}
+  .callout.warn{background:#FBF1E6;border:1px solid #EAD6BC;color:#8a6a32}
+  .callout.good{background:#EEF3EC;border:1px solid #DCE7DB;color:#5e7a5c}
+  .callout.red{background:#FBECEC;border:1px solid #E6C9C9;color:#a05a5a}
+  .callout b{font-weight:700}
+  .chk{display:flex;align-items:flex-start;gap:10px;margin-top:13px;font-size:14px;color:var(--muted)}
+  .chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--sage)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--soft);color:var(--muted);padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
+  code.inline{background:var(--soft);padding:2px 6px;border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--clay-dark)}
+  @media(max-width:560px){h1{font-size:25px}.step{padding:19px 16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">&larr; zurück</a>
+  <header class="top">
+    <div class="kicker">Dein eigener KI-Assistent</div>
+    <h1>Claude Code, sicher eingerichtet</h1>
+    <p class="sub">Dein eigener KI-Assistent, der auf deinem Computer wirklich Sachen erledigen kann, so eingerichtet, dass er dich nicht ständig fragt, aber deine Fotos und privaten Dateien niemals anfassen kann. Geh die Schritte der Reihe nach durch. Etwa 15 Minuten.</p>
+  </header>
+
+  <div class="callout warn">Diese Anleitung ist für einen <b>Mac</b> geschrieben. Falls du Windows hast, sag Samuel kurz Bescheid, dann gibt er dir die Windows-Version. Die Sicherheits-Sandbox in Schritt 5 gibt es nur auf dem Mac.</div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">0</div><div><h2>Was du vorher brauchst</h2></div></div>
+    <ul class="clean">
+      <li>Einen Mac und etwa 15 ruhige Minuten.</li>
+      <li>Ein <b>Claude Pro oder Max</b> Abo (das kostenlose claude.ai reicht nicht). Wenn du unsicher bist, frag Samuel.</li>
+      <li>Die App <b>Terminal</b>. Die ist schon auf deinem Mac. Drück <code class="inline">Cmd + Leertaste</code>, tipp <i>Terminal</i>, Enter. Ein kleines Textfenster geht auf. Da hinein kopierst du die Befehle unten.</li>
+    </ul>
+    <details class="explain"><summary>Was ist das überhaupt?</summary>
+      <div class="body">Claude Code ist Claude (die KI, mit der du schreibst), aber direkt auf deinem Computer statt in einem Chatfenster. Du sagst ihm in normaler Sprache, was du willst ("räum diesen Ordner auf", "bau mir eine kleine Webseite"), und er macht es. Das Terminal ist nur die Tür, durch die du mit ihm sprichst.</div>
+    </details>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">1</div><div><h2>Installieren</h2></div></div>
+    <p class="t">Kopier das, füg es ins Terminal ein, drück Enter. Warte, bis es fertig ist.</p>
+    <div class="code"><button class="copy">kopieren</button><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
+    <details class="explain"><summary>Was macht diese Zeile?</summary>
+      <div class="body"><b>Was:</b> lädt das offizielle Installationsprogramm von Anthropic (den Machern von Claude) herunter und startet es. <b>Warum:</b> es ist der empfohlene Weg und hält sich selbst aktuell. <b>Rückgängig:</b> du machst das nur einmal; deinstallieren steht ganz unten in Schritt 8.</div>
+    </details>
+    <div class="chk"><input type="checkbox"><span>Fertig installiert</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">2</div><div><h2>Einloggen</h2></div></div>
+    <p class="t">Tipp das und drück Enter:</p>
+    <div class="code"><button class="copy">kopieren</button><pre>claude</pre></div>
+    <p class="t muted">Ein Browserfenster geht auf und fragt nach deinem Claude-Login. Einloggen, bestätigen, zurück ins Terminal. Tipp dann <code class="inline">/exit</code> + Enter, um es kurz zu schließen, wir richten erst die Sicherheit ein, bevor du loslegst.</p>
+    <div class="chk"><input type="checkbox"><span>Eingeloggt</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">3</div><div><h2>Einen eigenen, sicheren Arbeitsordner anlegen</h2></div></div>
+    <p class="t">Wir geben Claude einen festen Spielplatz. Das hält alles ordentlich an einem Ort. Kopier das ins Terminal:</p>
+    <div class="code"><button class="copy">kopieren</button><pre>mkdir -p ~/claude-projekte</pre></div>
+    <p class="t muted">Das legt einen Ordner namens <code class="inline">claude-projekte</code> in deinem Benutzerordner an. Hier wirst du später arbeiten, weit weg von deinen Fotos und Dokumenten.</p>
+    <div class="chk"><input type="checkbox"><span>Ordner angelegt</span></div>
+  </div>
+
+  <div class="step safety">
+    <div class="step-head"><div class="num">4</div><div><h2>Aufhören zu fragen + private Sachen wegsperren <span class="tag">wichtig</span></h2></div></div>
+    <p class="t">Ehrlich gesagt: der "frag-nicht-jedes-Mal"-Modus (genannt <b>Bypass</b>) ist bequem, aber ohne Schutz wäre er leichtsinnig. Deshalb machen wir beides in einem Schritt: Fragen aus, UND eine Mauer um deine Fotos, Dokumente und Passwörter, die Claude niemals lesen oder ändern darf.</p>
+    <p class="t">Kopier diesen ganzen Block ins Terminal, drück Enter. Er schreibt eine kleine Einstellungsdatei für dich.</p>
+    <div class="code"><button class="copy">kopieren</button><pre>mkdir -p ~/.claude && cat > ~/.claude/settings.json &lt;&lt;'EOF'
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "deny": [
+      "Read(~/Pictures)",
+      "Read(~/Pictures/**)",
+      "Read(~/Documents)",
+      "Read(~/Documents/**)",
+      "Read(~/Desktop/**)",
+      "Read(~/Downloads/**)",
+      "Read(~/Library/**)",
+      "Read(~/.ssh)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws)",
+      "Read(~/.aws/**)",
+      "Read(.env)",
+      "Edit(~/Pictures/**)",
+      "Write(~/Pictures/**)",
+      "Edit(.env)",
+      "Write(.env)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "denyRead": ["~/Pictures", "~/Documents", "~/Downloads", "~/.ssh", "~/.aws"],
+      "denyWrite": ["~/"]
+    },
+    "failIfUnavailable": false
+  }
+}
+EOF</pre></div>
+    <div class="callout good"><b>Was das schützt:</b> deinen ganzen Fotos-Ordner, deine Dokumente, Downloads, deine Library und deine Passwörter/Schlüssel. Claude weigert sich, sie zu öffnen oder zu ändern, auch im Bypass-Modus. Solche "deny"-Regeln werden immer befolgt, der Bypass hebelt sie nicht aus.</div>
+    <div class="callout warn"><b>Schon mal Claude Code benutzt?</b> Dieser Befehl ersetzt deine bisherigen Einstellungen. Falls du schon mal etwas eingerichtet hast, führ ihn nicht aus, sondern schick die Datei an Samuel, er fügt es dann zusammen.</div>
+    <details class="explain"><summary>Ist der Bypass-Modus gefährlich?</summary>
+      <div class="body"><b>Ehrliche Antwort:</b> Bypass heißt, Claude fragt nicht mehr bei jeder Aktion nach. Das Risiko wäre, dass es in Ordnern etwas tut, das du nicht wolltest. Genau das fangen wir zweifach ab: die deny-Liste oben (deine privaten Ordner sind tabu) und die Sandbox im nächsten Schritt (eine zusätzliche Mauer vom Mac selbst). Wenn du im Ordner <code class="inline">~/claude-projekte</code> arbeitest, bist du sehr gut abgesichert.</div>
+    </details>
+    <div class="chk"><input type="checkbox"><span>Einstellungsdatei angelegt</span></div>
+  </div>
+
+  <div class="step safety">
+    <div class="step-head"><div class="num">5</div><div><h2>Die Sicherheits-Sandbox einschalten <span class="tag">die starke Mauer</span></h2></div></div>
+    <p class="t">Die Einstellungen oben schalten die Sandbox schon ein. Die Sandbox ist eine Mauer, die der <b>Mac selbst</b> durchsetzt, also selbst wenn Claude irgendein cleveres Skript starten würde, blockt das Betriebssystem es weiterhin von deinen Fotos. Starte Claude neu und bestätige sie:</p>
+    <div class="code"><button class="copy">kopieren</button><pre>cd ~/claude-projekte && claude</pre></div>
+    <p class="t">Tipp dann das hier in Claude und drück Enter:</p>
+    <div class="code"><button class="copy">kopieren</button><pre>/sandbox</pre></div>
+    <p class="t muted">Wähl <b>Auto-allow mode</b>, falls es das anbietet. Damit ist die stärkste Schicht aktiv.</p>
+    <div class="chk"><input type="checkbox"><span>Sandbox bestätigt</span></div>
+  </div>
+
+  <div class="step safety">
+    <div class="step-head"><div class="num">6</div><div><h2>Beweis dir selbst, dass es sicher ist</h2></div></div>
+    <p class="t">Vertrau mir nicht einfach. Test es. Tipp das in Claude und drück Enter:</p>
+    <div class="code"><button class="copy">kopieren</button><pre>Bitte lies die Dateinamen in meinem Fotos-Ordner (~/Pictures) vor.</pre></div>
+    <div class="callout good">✅ <b>Grün (so soll es sein):</b> Claude weigert sich und sagt, es darf auf diesen Ordner nicht zugreifen. Dann funktioniert deine Mauer.</div>
+    <div class="callout red">🛑 <b>Rot (Stopp):</b> Falls es trotzdem deine Fotos auflistet, hör hier auf und schick das an Samuel, bevor du es für irgendwas benutzt. (Sollte nicht passieren, aber prüfen ist besser als vertrauen.)</div>
+    <div class="chk"><input type="checkbox"><span>Getestet, Claude hat sich geweigert. Meine Dateien sind sicher.</span></div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">7</div><div><h2>So benutzt du es</h2></div></div>
+    <p class="t">Jedes Mal, wenn du es benutzen willst: Terminal öffnen, das hier tippen:</p>
+    <div class="code"><button class="copy">kopieren</button><pre>cd ~/claude-projekte && claude</pre></div>
+    <p class="t">Dann sprich einfach mit ihm wie mit einem Menschen. Ein paar Ideen zum Ausprobieren:</p>
+    <ul class="clean">
+      <li>"Bau mir eine einfache Webseite über meine Morgenroutine."</li>
+      <li>"Mach mir eine Packliste für 5 Tage und speicher sie als Datei."</li>
+      <li>"Erklär mir, was du gerade gemacht hast, als wäre ich nicht technisch."</li>
+    </ul>
+    <p class="t muted">Viel Spaß. 🤍</p>
+  </div>
+
+  <div class="step panic">
+    <div class="step-head"><div class="num">8</div><div><h2>Wie du alles wieder ausmachst <span class="tag">Notbremse</span></h2></div></div>
+    <p class="t">Du hast immer die Kontrolle. Falls du je etwas zurücknehmen willst:</p>
+    <ul class="clean">
+      <li><b>Claude sofort stoppen:</b> drück zweimal <code class="inline">Ctrl + C</code> im Terminal, oder tipp <code class="inline">/exit</code>.</li>
+      <li><b>Das "frag-nicht"-Verhalten ausschalten:</b> öffne die Einstellungen und lösch die Zeile mit <code class="inline">bypassPermissions</code> (dann fragt es wieder bei allem nach). So öffnest du die Datei:</li>
+    </ul>
+    <div class="code"><button class="copy">kopieren</button><pre>open -e ~/.claude/settings.json</pre></div>
+    <ul class="clean">
+      <li><b>Alle Einstellungen komplett zurücksetzen:</b></li>
+    </ul>
+    <div class="code"><button class="copy">kopieren</button><pre>rm ~/.claude/settings.json</pre></div>
+    <ul class="clean">
+      <li><b>Claude Code ganz deinstallieren:</b></li>
+    </ul>
+    <div class="code"><button class="copy">kopieren</button><pre>claude uninstall</pre></div>
+    <p class="t muted">Nichts davon fasst deine Dateien an, es entfernt nur Claude und seine Einstellungen.</p>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.code .copy').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const txt=btn.parentElement.querySelector('pre').innerText;
+      navigator.clipboard.writeText(txt).then(()=>{const o=btn.textContent;btn.textContent='kopiert ✓';btn.classList.add('done');setTimeout(()=>{btn.textContent=o;btn.classList.remove('done');},1400);});
+    });
+  });
+  document.querySelectorAll('.chk input').forEach((c,i)=>{
+    const k='hellen_claude_setup_'+i;
+    c.checked=localStorage.getItem(k)==='1';
+    c.addEventListener('change',()=>localStorage.setItem(k,c.checked?'1':'0'));
+  });
+</script>
+</body>
+</html>

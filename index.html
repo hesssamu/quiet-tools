@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Für dich</title>
+<style>
+  :root{
+    --bg:#FBF6F0; --card:#FFFFFF; --ink:#3A322E; --muted:#8A7E76;
+    --clay:#C2826A; --clay-dark:#A86A53; --sage:#8FA68E;
+    --line:#ECE3D9; --soft:#F4ECE3;
+    --shadow:0 8px 30px rgba(120,90,70,.10);
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:radial-gradient(1200px 500px at 50% -140px,#FBEFE7 0%,rgba(251,239,231,0) 70%),var(--bg);
+       color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .wrap{max-width:620px;margin:0 auto;padding:54px 20px 70px}
+  .hi{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--clay);font-weight:600;text-align:center}
+
+  /* the note IS the centerpiece */
+  .note{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);
+        padding:32px 30px;margin:18px 0 30px;font-size:17px;line-height:1.75}
+  .note p{margin:0 0 13px}
+  .note p:last-child{margin-bottom:0}
+  .note .heard{color:var(--clay-dark)}
+  .note .sign{font-family:var(--serif);font-style:italic;color:var(--clay-dark);font-size:18px;margin-top:6px}
+
+  .small-intro{text-align:center;color:var(--muted);font-size:14px;margin:0 0 16px}
+  .cards{display:grid;gap:13px}
+  .tile{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;
+        box-shadow:var(--shadow);padding:17px 19px;text-decoration:none;color:inherit;transition:.18s}
+  .tile:hover{transform:translateY(-2px);border-color:var(--clay)}
+  .tile .ic{flex:none;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:25px;background:var(--soft)}
+  .tile h3{font-family:var(--serif);font-size:19px;margin:0 0 2px;font-weight:600}
+  .tile p{margin:0;font-size:13.5px;color:var(--muted)}
+  .tile .arrow{margin-left:auto;color:var(--clay);font-size:20px;flex:none}
+
+  .privacy{display:flex;gap:10px;align-items:flex-start;background:#EEF3EC;border:1px solid #DCE7DB;color:#5e7a5c;
+           font-size:13px;border-radius:14px;padding:13px 16px;margin-top:26px;line-height:1.55}
+  footer{text-align:center;color:#b8ada2;font-size:12px;margin-top:22px}
+  @media(max-width:560px){.note{padding:26px 22px;font-size:16px}.wrap{padding-top:38px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hi">Für Hellen</div>
+
+  <!-- ============================================================== -->
+  <!-- SAMUEL: This note is the most important thing on the page.      -->
+  <!-- The council was unanimous: it must be in YOUR real voice and    -->
+  <!-- name the actual failure, with no over-promising and no demand   -->
+  <!-- for a reaction. Below is a strong draft built from the council  -->
+  <!-- (Opus/GPT/Gemini all converged on this shape). REWRITE it so    -->
+  <!-- it is truly yours. Rules baked in: name what happened, say the  -->
+  <!-- gift does NOT fix it, admit your conflict of interest, make      -->
+  <!-- clear the repair is your behavior not a tool. Do NOT add         -->
+  <!-- "ich hoffe du siehst..." or anything that fishes for a reply.   -->
+  <!-- ============================================================== -->
+  <div class="note">
+    <p>Hellen,</p>
+    <p>ich wollte dir nicht noch ein großes Ding bauen, das mehr verspricht als es hält. Das letzte Mal ist das nach hinten losgegangen, und das war mein Fehler, nicht deiner.</p>
+    <p>Das hier ist einfach das, was ich von dir gehört habe:</p>
+    <p class="heard">Dass dir Ehrlichkeit mehr bedeutet als jede große Geste, auch wenn sie unbequem ist. Dass du dich gesünder fühlen willst, ohne dass es immer nur ums Gewicht geht. Dass du diese KI-Sachen ausprobieren willst, aber nicht auf Kosten deiner Privatsphäre. Und dass deine Zukunft zählt, und dass ich dabei nicht ganz neutral bin, weil ich Teil davon bin.</p>
+    <p>Und dass "ich bin für dich da" nichts wert ist, wenn ich dann einschlafe. Das habe ich verstanden. Daran muss ich arbeiten, nicht an einem Tool.</p>
+    <p>Die Sachen hier sind klein, privat, und ganz ohne Druck. Nutz sie oder lass sie liegen. Beides ist okay.</p>
+    <p class="sign">— S</p>
+  </div>
+
+  <p class="small-intro">Drei kleine Sachen, falls du mal reinschauen magst:</p>
+  <div class="cards">
+    <a class="tile" href="reflect.html">
+      <div class="ic">🌿</div>
+      <div>
+        <h3>Nur für dich zum Nachdenken</h3>
+        <p>Ein ruhiger, komplett privater Ort, um über deinen Weg nachzudenken. Ich sehe nichts davon.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </a>
+    <a class="tile" href="meals.html">
+      <div class="ic">🍳</div>
+      <div>
+        <h3>Essen, leicht gemacht</h3>
+        <p>Einfache Sachen, die gut tun und satt machen, mit Einkaufsliste. Kein Kalorienzählen.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </a>
+    <a class="tile" href="claude-setup.html">
+      <div class="ic">🤖</div>
+      <div>
+        <h3>Dein eigenes Claude Code</h3>
+        <p>In 15 Minuten sicher eingerichtet, so dass es deine Fotos und privaten Dateien niemals anfassen kann.</p>
+      </div>
+      <div class="arrow">&rarr;</div>
+    </a>
+  </div>
+
+  <div class="privacy">
+    <span style="font-size:16px">🔒</span>
+    <span><b>Alles bleibt bei dir.</b> Es gibt keinen Server und keine Datenbank. Alles, was du hier eingibst oder planst, lebt nur auf deinem Gerät. Ich kann nichts davon sehen, jetzt nicht und später nicht.</span>
+  </div>
+  <footer>Ohne Erwartung gemacht. 🤍</footer>
+</div>
+</body>
+</html>

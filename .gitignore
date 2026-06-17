@@ -1,0 +1,4 @@
+# Never publish the council notes or anything derived from the chat
+_council/
+*.zip
+.DS_Store
