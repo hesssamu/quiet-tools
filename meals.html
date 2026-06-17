@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Essen, leicht gemacht</title>
 <style>
   :root{
@@ -14,42 +14,70 @@
     --serif:Georgia,'Times New Roman',serif;
     --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   }
-  *{box-sizing:border-box}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:940px;margin:0 auto;padding:22px 16px 80px}
-  header.top{text-align:center;padding:20px 0 6px}
-  .kicker{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--clay);font-weight:600}
-  h1{font-family:var(--serif);font-weight:600;font-size:34px;margin:8px 0 6px}
-  .sub{color:var(--muted);max-width:540px;margin:0 auto;font-size:16px}
-  .backlink{display:inline-block;margin-top:12px;font-size:13px;color:var(--muted);text-decoration:none}
+  .wrap{max-width:940px;margin:0 auto;padding:18px 16px 80px}
+  .headrow{display:flex;justify-content:space-between;align-items:center}
+  .backlink{font-size:13px;color:var(--muted);text-decoration:none}
   .backlink:hover{color:var(--clay)}
+  .fbtop{border:1px solid var(--line);background:#fff;color:var(--clay-dark);font-weight:600;font-size:13px;padding:7px 12px;border-radius:999px;cursor:pointer}
+  header.top{text-align:center;padding:14px 0 6px}
+  .kicker{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--clay);font-weight:600}
+  h1{font-family:var(--serif);font-weight:600;font-size:32px;margin:8px 0 6px}
+  .sub{color:var(--muted);max-width:560px;margin:0 auto;font-size:15.5px}
 
-  .tabs{display:flex;gap:6px;justify-content:center;margin:22px 0 18px;flex-wrap:wrap}
-  .tab{border:none;background:var(--soft);color:var(--muted);font-family:var(--sans);font-size:14px;font-weight:600;
-       padding:10px 18px;border-radius:999px;cursor:pointer;transition:.15s}
+  .endo-note{display:flex;gap:10px;align-items:flex-start;background:#F3EEF6;border:1px solid #E2D6EC;color:#6a5a78;
+             font-size:13px;border-radius:14px;padding:12px 15px;margin:16px auto 4px;max-width:620px;line-height:1.5}
+  .endo-note b{color:#54466a}
+
+  .tabs{display:flex;gap:6px;justify-content:center;margin:18px 0 16px;flex-wrap:wrap}
+  .tab{border:none;background:var(--soft);color:var(--muted);font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 16px;border-radius:999px;cursor:pointer;transition:.15s}
   .tab:hover{color:var(--ink)}
   .tab.active{background:var(--clay);color:#fff;box-shadow:var(--shadow)}
   .panel{display:none;animation:fade .3s ease}
   .panel.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  .prompt{text-align:center;font-family:var(--serif);font-size:20px;color:var(--ink);margin:6px 0 4px}
-  .prompt-sub{text-align:center;color:var(--muted);font-size:14px;margin:0 0 16px}
+  /* ===== SWIPE ===== */
+  .swipe-help{text-align:center;color:var(--muted);font-size:14px;margin:0 0 14px}
+  .deck{position:relative;width:100%;max-width:340px;height:430px;margin:0 auto}
+  .sc{position:absolute;inset:0;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);
+      display:flex;flex-direction:column;overflow:hidden;user-select:none;touch-action:pan-y}
+  .sc .emoji{font-size:64px;text-align:center;padding:34px 0 8px;background:var(--soft)}
+  .sc.gentle .emoji{background:#F1F5EF}
+  .sc .body{padding:18px 20px;display:flex;flex-direction:column;gap:9px;flex:1}
+  .sc h3{font-family:var(--serif);font-size:24px;margin:0;font-weight:600}
+  .sc .meta{display:flex;gap:7px;flex-wrap:wrap}
+  .sc .why{font-size:15px;color:var(--muted);flex:1}
+  .pill{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px}
+  .pill.time{background:#EEF3EC;color:#5e7a5c}
+  .pill.effort{background:#F6F0E2;color:#9a7d3e}
+  .pill.gentle{background:#EAF1E8;color:#5e7a5c}
+  .pill.tag{background:#FBEFE7;color:var(--clay-dark)}
+  .stamp{position:absolute;top:22px;font-family:var(--serif);font-size:30px;font-weight:700;padding:4px 14px;border-radius:12px;border:3px solid;opacity:0;transform:rotate(-12deg)}
+  .stamp.like{right:18px;color:var(--sage);border-color:var(--sage)}
+  .stamp.nope{left:18px;color:var(--love);border-color:var(--love);transform:rotate(12deg)}
+  .swbtns{display:flex;justify-content:center;gap:26px;margin:18px 0 6px}
+  .swbtns button{width:62px;height:62px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:26px;cursor:pointer;box-shadow:var(--shadow);transition:.12s}
+  .swbtns button:active{transform:scale(.92)}
+  .swbtns .no:hover{border-color:var(--love)}
+  .swbtns .yes:hover{border-color:var(--sage)}
+  .deckdone{text-align:center;color:var(--muted);padding:60px 20px}
+  .deckdone .big{font-size:44px;display:block;margin-bottom:12px}
+  .likecount{text-align:center;font-size:13px;color:var(--love);margin-top:10px;font-weight:600}
 
-  .types{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
-  .type{border:1px solid var(--line);background:#fff;color:var(--muted);font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;cursor:pointer}
+  /* ===== filters + grid ===== */
+  .types{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+  .type{border:1px solid var(--line);background:#fff;color:var(--muted);font-size:13px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer}
   .type.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-
   .moods{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:8px}
   .mood{border:1px solid var(--line);background:#fff;color:var(--muted);font-size:13px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer;transition:.15s}
   .mood:hover{border-color:var(--clay);color:var(--clay)}
   .mood.on{background:var(--clay);color:#fff;border-color:var(--clay)}
   .moretoggle{display:block;margin:4px auto 18px;border:none;background:none;color:var(--clay);font-weight:600;font-size:13px;cursor:pointer}
 
-  /* SOS */
-  .sos-bar{background:#EEF1F6;border:1px solid #DCE2EC;border-radius:16px;padding:14px 18px;margin:6px 0 20px;
-           display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .sos-bar{background:#EEF1F6;border:1px solid #DCE2EC;border-radius:16px;padding:14px 18px;margin:6px 0 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .sos-bar .txt{flex:1;min-width:200px}
   .sos-bar b{display:block;font-size:15px;color:#4a5a72}
   .sos-bar span{font-size:13px;color:#74809a}
@@ -59,22 +87,17 @@
   .sos-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin-bottom:8px;font-size:14.5px;display:flex;gap:10px;align-items:flex-start}
   .sos-item .n{flex:none;width:22px;height:22px;border-radius:50%;background:#EEF1F6;color:#4a5a72;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
 
-  /* section labels */
   .rowlabel{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-size:20px;margin:8px 0 12px}
   .rowlabel .hint{font-family:var(--sans);font-size:12px;color:var(--muted);font-weight:400}
-
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px}
-  .meal{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .meal{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;position:relative}
   .meal.love{border-color:#EAC9D2}
+  .meal .heart{position:absolute;top:10px;right:12px;font-size:18px}
   .meal .emoji{font-size:38px;text-align:center;padding:20px 0 4px;background:var(--soft)}
-  .meal.love .emoji{background:#FBF0F3}
+  .meal.gentle .emoji{background:#F1F5EF}
   .meal .body{padding:15px 15px 17px;display:flex;flex-direction:column;gap:7px;flex:1}
   .meal h3{font-family:var(--serif);font-size:19px;margin:0;font-weight:600}
   .meta{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-  .pill{font-size:11px;font-weight:700;letter-spacing:.02em;padding:4px 9px;border-radius:999px}
-  .pill.time{background:#EEF3EC;color:#5e7a5c}
-  .pill.effort{background:#F6F0E2;color:#9a7d3e}
-  .pill.lovetag{background:#FBE4EA;color:var(--love)}
   .why{font-size:14px;color:var(--muted)}
   .why.lovewhy{color:var(--love);font-style:italic}
   details.recipe{margin-top:2px}
@@ -90,13 +113,10 @@
   .btn.primary{background:var(--clay);color:#fff;width:100%}
   .btn.primary:hover{background:var(--clay-dark)}
   .btn.ghost{background:var(--soft);color:var(--ink)}
-  .btn.ghost:hover{background:#ECE0D3}
   .daypick{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
   .daypick button{font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
   .daypick button:hover{border-color:var(--sage);color:var(--sage)}
-  .addlove{margin:14px auto 0;display:block;border:1px dashed #EAC9D2;background:#FBF0F3;color:var(--love);font-weight:600;font-size:13px;padding:10px 16px;border-radius:12px;cursor:pointer}
 
-  /* week */
   .week{display:grid;gap:13px}
   .day{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px}
   .day h3{font-family:var(--serif);margin:0 0 8px;font-size:19px}
@@ -106,9 +126,7 @@
   .slot .meal-name{flex:1;font-size:14px}
   .slot .meal-name.empty{color:#c3b8ad;font-style:italic}
   .slot .rm{border:none;background:none;color:#cbb;cursor:pointer;font-size:16px}
-  .slot .rm:hover{color:var(--clay)}
 
-  /* shopping */
   .shop-group{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px 18px;margin-bottom:13px}
   .shop-group h3{font-family:var(--serif);margin:0 0 7px;font-size:18px}
   .shop-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:14px;border-top:1px solid var(--soft)}
@@ -119,44 +137,69 @@
   .empty-state{text-align:center;color:var(--muted);padding:46px 20px;font-size:15px}
   .empty-state .big{font-size:38px;display:block;margin-bottom:10px}
   .privacy{display:flex;gap:9px;align-items:flex-start;background:#EEF3EC;border:1px solid #DCE7DB;color:#5e7a5c;font-size:13px;border-radius:14px;padding:11px 15px;margin:20px 0 0}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+
+  /* feedback modal */
+  .modal{position:fixed;inset:0;background:rgba(40,32,28,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:80}
+  .modal.show{display:flex;animation:fade .25s ease}
+  .modal .box{background:#fff;border-radius:20px;max-width:440px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal h3{font-family:var(--serif);font-size:22px;margin:0 0 4px}
+  .modal p{font-size:14px;color:var(--muted);margin:0 0 14px}
+  .modal textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--sans);font-size:15px;min-height:110px;resize:vertical;background:#FFFDFB;color:var(--ink)}
+  .modal textarea:focus{outline:none;border-color:var(--clay)}
+  .modal .row{display:flex;gap:10px;margin-top:14px}
+  .modal .row .btn{flex:1}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;z-index:90}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  @media(max-width:560px){h1{font-size:28px}.wrap{padding-top:8px}}
+  @media(max-width:560px){h1{font-size:27px}.wrap{padding-top:10px}.deck{height:400px}}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="headrow">
+    <a class="backlink" href="index.html">&larr; zurück</a>
+    <button class="fbtop" id="fbOpen">💬 Wünsch dir was</button>
+  </div>
   <header class="top">
     <div class="kicker">Für dich</div>
     <h1>Essen, leicht gemacht</h1>
-    <p class="sub">Einfache Sachen, die gut tun und satt machen, mit Einkaufsliste. Kein Kalorienzählen, kein Druck. Du suchst dir aus, was sich heute machbar anfühlt.</p>
-    <a class="backlink" href="index.html">&larr; zurück</a>
+    <p class="sub">Gesunde, eher entzündungsarme Gerichte, die bei Endometriose gut tun und sanft zum Bauch sind. Ohne Kalorienzählen, ohne Druck.</p>
   </header>
 
+  <div class="endo-note"><span style="font-size:15px">🌸</span><span>Mit <b>Endometriose</b> im Hinterkopf zusammengestellt: viel Gemüse, gute Fette, sanft zum Bauch. Jeder Körper ist anders (Histamin, FODMAP), also vertrau deinem Bauchgefühl und tausch frei, was dir nicht gut tut. <b>🌸 = extra sanft</b> an Flare-Tagen.</span></div>
+
   <div class="tabs">
-    <button class="tab active" data-panel="browse">Was esse ich?</button>
+    <button class="tab active" data-panel="swipe">✨ Entdecken</button>
+    <button class="tab" data-panel="browse">Alle Gerichte</button>
     <button class="tab" data-panel="week">Meine Woche</button>
     <button class="tab" data-panel="shop">Einkaufsliste</button>
   </div>
 
-  <!-- BROWSE -->
-  <section class="panel active" id="browse">
-    <p class="prompt">Was würde sich heute leicht anfühlen?</p>
-    <p class="prompt-sub">Du musst nichts perfekt machen. Tipp einfach an, wie du dich gerade fühlst.</p>
-
-    <div class="sos-bar">
-      <div class="txt"><b>Schwieriger Tag?</b><span>Kein Neustart nötig. Nur etwas Einfaches, das dich gut durch den Moment bringt.</span></div>
-      <button id="sosBtn">Zeig mir 8 Rettungsessen</button>
+  <!-- SWIPE -->
+  <section class="panel active" id="swipe">
+    <p class="swipe-help">Wisch nach <b style="color:var(--sage)">rechts</b>, wenn es dir gefällt, nach <b style="color:var(--love)">links</b>, wenn nicht. Alles, was dir gefällt, landet in „Alle Gerichte" mit ❤️.</p>
+    <div class="deck" id="deck"></div>
+    <div class="swbtns">
+      <button class="no" id="swNo" title="nö">✕</button>
+      <button class="yes" id="swYes" title="mag ich">❤️</button>
     </div>
-    <div class="sos-list" id="sosList"></div>
+    <div class="likecount" id="likeCount"></div>
+  </section>
 
+  <!-- BROWSE -->
+  <section class="panel" id="browse">
     <div class="types" id="types"></div>
     <div class="moods" id="moods"></div>
     <button class="moretoggle" id="moreToggle">+ mehr Stimmungen</button>
 
+    <div class="sos-bar">
+      <div class="txt"><b>Schwieriger Tag?</b><span>Kein Neustart nötig. Nur etwas Einfaches, das dir gut tut.</span></div>
+      <button id="sosBtn">8 sanfte Rettungsessen</button>
+    </div>
+    <div class="sos-list" id="sosList"></div>
+
     <div id="loveRow"></div>
     <div class="grid" id="grid"></div>
-    <button class="addlove" id="addLove">+ Ein Gericht hinzufügen, das du liebst</button>
   </section>
 
   <!-- WEEK -->
@@ -169,193 +212,233 @@
   <section class="panel" id="shop">
     <div class="toolbar">
       <button class="btn ghost" id="copyList">Liste kopieren</button>
-      <button class="btn ghost" id="resetChecks">Alles abhaken zurücksetzen</button>
+      <button class="btn ghost" id="resetChecks">Haken zurücksetzen</button>
     </div>
     <div id="shopList"></div>
   </section>
 
-  <div class="privacy"><span style="font-size:15px">🔒</span><span>Deine Woche und deine Liste bleiben nur auf diesem Gerät. Nichts wird irgendwohin gesendet.</span></div>
+  <div class="privacy"><span style="font-size:15px">🔒</span><span>Deine Woche, deine Favoriten und deine Liste bleiben nur auf diesem Gerät. Nichts wird gesendet, außer du schickst über „Wünsch dir was" bewusst Feedback an Samuel.</span></div>
 </div>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal" id="fbModal">
+  <div class="box">
+    <h3>Wünsch dir was 🤍</h3>
+    <p>Was fehlt dir? Ein Gericht, das du liebst? Etwas, das nicht passt? Schreib es einfach, es geht direkt an Samuel, und er baut deine Wünsche in dieses Tool ein.</p>
+    <textarea id="fbText" placeholder="z.B. „Ich liebe Ofengemüse, mehr davon" oder „Bitte ohne Tomaten, vertrag ich nicht" oder „kannst du Frühstücke zum Mitnehmen hinzufügen?""></textarea>
+    <div class="row">
+      <button class="btn primary" id="fbSend">An Samuel senden</button>
+      <button class="btn ghost" id="fbCopy">Kopieren</button>
+      <button class="btn ghost" id="fbClose">Schließen</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============ MEALS HELLEN LOVES ============================================
-   SAMUEL: Replace these EXAMPLES with 3-4 meals Hellen ACTUALLY loves,
-   including comfort foods and treats (not just "healthy" ones). This is the
-   recognition moment the council called the emotional anchor. Use her real
-   favourites or it loses the magic. "why" shows as the card's line, in her
-   spirit. Keep "ing" so it can join the shopping list (optional).
-   ========================================================================== */
-const HELLEN_LOVES = [
-  {name:"Käsespätzle", type:"abend", emoji:"🧀", why:"Dein Soulfood an grauen Tagen.", tags:["cozy","warm"],
-   ing:["Spätzle","geriebener Käse","Zwiebeln"], steps:["Spätzle erwärmen","Käse schmelzen lassen","Röstzwiebeln drüber"], sub:""},
-  {name:"Müsli mit Joghurt & vielen Beeren", type:"frühstück", emoji:"🥣", why:"Dein liebster einfacher Morgen.", tags:["morning_quick","fresh"],
-   ing:["Müsli","Naturjoghurt","frische Beeren"], steps:["Joghurt in eine Schüssel","Müsli dazu","Beeren obendrauf"], sub:""},
-];
+/* =========================================================================
+   SAMUEL: feedback goes to this address (one tap opens her mail app, prefilled).
+   Change it if you want. For a true one-tap send without opening mail, create a
+   free Formspree form (formspree.io) and put its endpoint in FORMSPREE below;
+   if set, it POSTs silently and emails you. Leave '' to use the mail app.
+   ========================================================================= */
+const FEEDBACK_EMAIL='samuel@dripagency.de';
+const FORMSPREE=''; // e.g. 'https://formspree.io/f/xxxxxxx'
 
-/* ============ THE 24 MEALS ================================================ */
-const MEALS = [
-  {id:'skyr-bowl',name:'Skyr-Beeren-Bowl',type:'frühstück',emoji:'🫐',time:4,effort:'keine',tags:['time_10','morning_quick','fresh','no_cook','steady_energy'],
-   why:'Leichter, frischer Start, der ruhig durch den Vormittag trägt.',ing:['Skyr','TK-Beeren','Haferflocken','Honig'],
-   steps:['Skyr in eine Schüssel geben','TK-Beeren drauf (tauen beim Essen auf)','Haferflocken + Honig darüber'],sub:'Kein Skyr? Magerquark mit einem Schluck Milch.'},
-  {id:'porridge',name:'Warmer Haferbrei',type:'frühstück',emoji:'🥣',time:7,effort:'leicht',tags:['warm','cozy','morning_quick','steady_energy'],
-   why:'Warm und gemütlich, hält dich ruhig durch einen langen Morgen.',ing:['Haferflocken','Milch oder Haferdrink','Banane','Zimt'],
-   steps:['Haferflocken + Milch 4 Min köcheln','Banane unterrühren','Mit Zimt bestreuen'],sub:'Keine Lust auf Herd? Genauso in der Mikrowelle, 2 Min.'},
-  {id:'overnight',name:'Overnight Oats',type:'frühstück',emoji:'🍶',time:3,effort:'keine',tags:['morning_quick','no_cook','one_hand','busy_day'],
-   why:'Morgens ist das Frühstück schon fertig. Ein Geschenk von gestern Abend.',ing:['Haferflocken','Skyr oder Milch','TK-Beeren','Chiasamen'],
-   steps:['Alles in ein Glas geben','Über Nacht in den Kühlschrank','Morgens mitnehmen'],sub:'Keine Chiasamen? Einfach weglassen.'},
-  {id:'ruehrei',name:'Rührei mit Schnittlauch',type:'frühstück',emoji:'🍳',time:6,effort:'leicht',tags:['warm','cozy','low_cleanup'],
-   why:'Weich, warm, herzhaft. Fühlt sich morgens nach echter Fürsorge an.',ing:['Eier','Butter','Schnittlauch','Vollkornbrot'],
-   steps:['Eier + Salz verquirlen','Bei niedriger Hitze cremig rühren','Schnittlauch drauf, Brot dazu'],sub:'Kein Schnittlauch? Salz + Pfeffer reichen.'},
-  {id:'quark-apfel',name:'Quark mit Apfel & Zimt',type:'frühstück',emoji:'🍎',time:4,effort:'keine',tags:['time_10','no_cook','fresh'],
-   why:'Cremig, leicht süß, leicht, aber es bleibt bei dir.',ing:['Magerquark','Apfel','Zimt','Honig'],
-   steps:['Quark in eine Schüssel','Apfel reiben oder würfeln','Zimt + Honig'],sub:'Kein Apfel? Beeren oder Birne.'},
-  {id:'avo-brot',name:'Avocado-Brot mit Ei',type:'frühstück',emoji:'🥑',time:8,effort:'leicht',tags:['cozy','fresh','steady_energy'],
-   why:'Reichhaltig und sättigend, bringt dich gut durch einen vollen Tag.',ing:['Vollkornbrot','Avocado','Ei','Chiliflocken'],
-   steps:['Brot toasten','Avocado darauf zerdrücken','Ei dazu + Salz'],sub:'Keine Avocado? Körniger Frischkäse.'},
+/* ===== meal data (endoGentle = extra sanft an Flare-Tagen) ===== */
+const HELLEN_LOVES=[
+  {name:"Käsespätzle", type:"abend", emoji:"🧀", why:"Dein Soulfood an grauen Tagen.", tags:["cozy","warm"], ing:["Spätzle","geriebener Käse","Zwiebeln"], steps:["Spätzle erwärmen","Käse schmelzen lassen","Röstzwiebeln drüber"], sub:""},
+  {name:"Müsli mit Joghurt & vielen Beeren", type:"frühstück", emoji:"🥣", why:"Dein liebster einfacher Morgen.", tags:["morning_quick","fresh"], endoGentle:true, ing:["Müsli","Naturjoghurt","frische Beeren"], steps:["Joghurt in eine Schüssel","Müsli dazu","Beeren obendrauf"], sub:""},
+];
+const MEALS=[
+  {id:'skyr-bowl',name:'Skyr-Beeren-Bowl',type:'frühstück',emoji:'🫐',time:4,effort:'keine',endoGentle:true,tags:['time_10','morning_quick','fresh','no_cook','steady_energy'],
+   why:'Leichter, frischer Start, der ruhig durch den Vormittag trägt.',ing:['Skyr','TK-Beeren','Haferflocken','Honig'],steps:['Skyr in eine Schüssel geben','TK-Beeren drauf','Haferflocken + Honig darüber'],sub:'Kein Skyr? Magerquark mit einem Schluck Milch.'},
+  {id:'porridge',name:'Warmer Haferbrei',type:'frühstück',emoji:'🥣',time:7,effort:'leicht',endoGentle:true,tags:['warm','cozy','morning_quick','steady_energy'],
+   why:'Warm und gemütlich, hält dich ruhig durch einen langen Morgen. Hafer ist sanft zum Bauch.',ing:['Haferflocken','Milch oder Haferdrink','Banane','Zimt'],steps:['Haferflocken + Milch 4 Min köcheln','Banane unterrühren','Mit Zimt bestreuen'],sub:'Keine Lust auf Herd? Mikrowelle, 2 Min.'},
+  {id:'overnight',name:'Overnight Oats',type:'frühstück',emoji:'🍶',time:3,effort:'keine',endoGentle:true,tags:['morning_quick','no_cook','one_hand','busy_day'],
+   why:'Morgens ist das Frühstück schon fertig. Ein Geschenk von gestern Abend.',ing:['Haferflocken','Skyr oder Milch','TK-Beeren','Chiasamen'],steps:['Alles in ein Glas','Über Nacht in den Kühlschrank','Morgens mitnehmen'],sub:'Keine Chiasamen? Weglassen.'},
+  {id:'ruehrei',name:'Rührei mit Schnittlauch',type:'frühstück',emoji:'🍳',time:6,effort:'leicht',endoGentle:true,tags:['warm','cozy','low_cleanup'],
+   why:'Weich, warm, herzhaft. Fühlt sich morgens nach echter Fürsorge an.',ing:['Eier','Butter','Schnittlauch','Vollkornbrot'],steps:['Eier + Salz verquirlen','Bei niedriger Hitze cremig rühren','Schnittlauch drauf, Brot dazu'],sub:'Kein Schnittlauch? Salz + Pfeffer reichen.'},
+  {id:'quark-apfel',name:'Quark mit Apfel & Zimt',type:'frühstück',emoji:'🍎',time:4,effort:'keine',endoGentle:true,tags:['time_10','no_cook','fresh'],
+   why:'Cremig, leicht süß, leicht, aber es bleibt bei dir.',ing:['Magerquark','Apfel','Zimt','Honig'],steps:['Quark in eine Schüssel','Apfel reiben oder würfeln','Zimt + Honig'],sub:'Kein Apfel? Beeren oder Birne.'},
+  {id:'avo-brot',name:'Avocado-Brot mit Ei',type:'frühstück',emoji:'🥑',time:8,effort:'leicht',endoGentle:true,tags:['cozy','fresh','steady_energy'],
+   why:'Gute Fette und Eiweiß, bringen dich gut durch einen vollen Tag.',ing:['Vollkornbrot','Avocado','Ei','Chiliflocken'],steps:['Brot toasten','Avocado darauf zerdrücken','Ei dazu + Salz'],sub:'Keine Avocado? Körniger Frischkäse.'},
   {id:'couscous',name:'Bunter Couscous-Salat',type:'mittag',emoji:'🥗',time:12,effort:'leicht',tags:['fresh','low_cleanup','steady_energy'],
-   why:'Frisch und bunt, leicht genug um nachmittags wach zu bleiben.',ing:['Couscous','TK-Gemüse oder Gurke/Tomate','Feta','Olivenöl','Zitrone'],
-   steps:['Couscous mit kochendem Wasser übergießen, 5 Min','Mit gehacktem Gemüse mischen','Feta, Öl, Zitrone'],sub:'Kein frisches Gemüse? TK-Gemüse auftauen.'},
+   why:'Frisch und bunt, leicht genug um nachmittags wach zu bleiben.',ing:['Couscous','Gurke/Tomate oder TK-Gemüse','Feta','Olivenöl','Zitrone'],steps:['Couscous mit kochendem Wasser übergießen, 5 Min','Mit Gemüse mischen','Feta, Öl, Zitrone'],sub:'Empfindlicher Bauch? Feta weglassen, mehr Gurke.'},
   {id:'linsensuppe',name:'Linsensuppe (schnell)',type:'mittag',emoji:'🥘',time:15,effort:'mittel',tags:['warm','cozy','steady_energy'],
-   why:'Wärmend und erdend, macht einen vollen Tag wieder machbar.',ing:['Rote Linsen','Karotte','Zwiebel','Gemüsebrühe','Kreuzkümmel'],
-   steps:['Zwiebel + Karotte andünsten','Linsen + Brühe, 12 Min köcheln','Mit Kreuzkümmel + Salz würzen'],sub:'Keine Zeit? Fertige Linsensuppe + frischer Spinat.'},
+   why:'Wärmend und erdend, viel pflanzliches Eiweiß.',ing:['Rote Linsen','Karotte','Zwiebel','Gemüsebrühe','Kreuzkümmel'],steps:['Zwiebel + Karotte andünsten','Linsen + Brühe, 12 Min köcheln','Mit Kreuzkümmel + Salz würzen'],sub:'Hülsenfrüchte schwer im Bauch? Kleinere Portion, gut pürieren.'},
   {id:'haehnchen-wrap',name:'Hähnchen-Wrap',type:'mittag',emoji:'🌯',time:10,effort:'leicht',tags:['time_10','one_hand','busy_day'],
-   why:'Mit einer Hand essbar, hält die Energie stabil zwischen den Terminen.',ing:['Vollkornwrap','Hähnchenbrust (vorgegart)','Salat','Hummus'],
-   steps:['Hummus auf den Wrap','Hähnchen + Salat','Einrollen, optional in der Pfanne toasten'],sub:'Kein Hähnchen? Räucherlachs oder Kichererbsen.'},
+   why:'Mit einer Hand essbar, hält die Energie stabil zwischen den Terminen.',ing:['Vollkornwrap','Hähnchenbrust (vorgegart)','Salat','Hummus'],steps:['Hummus auf den Wrap','Hähnchen + Salat','Einrollen, optional toasten'],sub:'Kein Hähnchen? Kichererbsen.'},
   {id:'kichererbsen-bowl',name:'Kichererbsen-Bowl',type:'mittag',emoji:'🥙',time:10,effort:'leicht',tags:['fresh','no_cook','steady_energy','low_cleanup'],
-   why:'Sättigend und frisch zugleich, kein Nachmittagstief.',ing:['Kichererbsen (Dose)','Gurke','Tomate','Feta','Olivenöl','Zitrone'],
-   steps:['Kichererbsen abspülen','Gemüse würfeln, mischen','Feta + Öl + Zitrone + Salz'],sub:'Kein Feta? Körniger Frischkäse.'},
+   why:'Sättigend und frisch zugleich, kein Nachmittagstief.',ing:['Kichererbsen (Dose)','Gurke','Tomate','Feta','Olivenöl','Zitrone'],steps:['Kichererbsen abspülen','Gemüse würfeln, mischen','Feta + Öl + Zitrone'],sub:'FODMAP-empfindlich? Statt Kichererbsen gegrilltes Hähnchen.'},
   {id:'lachs-bowl',name:'Räucherlachs-Bowl mit Reis',type:'mittag',emoji:'🐟',time:12,effort:'leicht',tags:['fresh','warm','steady_energy'],
-   why:'Leicht, aber besonders, ein sanftes Verwöhnen an einem vollen Tag.',ing:['Reis (Beutel)','Räucherlachs','Gurke','Avocado','Sojasauce'],
-   steps:['Mikrowellen-Reis kochen','Mit Lachs + Gurke + Avocado toppen','Soja darüber'],sub:'Keine Avocado? Edamame (TK).'},
-  {id:'suesskartoffel',name:'Süßkartoffel aus dem Ofen',type:'mittag',emoji:'🍠',time:5,effort:'leicht',tags:['warm','cozy','low_cleanup'],
-   why:'Reinschieben und vergessen, kommt warm und tröstlich heraus.',ing:['Süßkartoffel','körniger Frischkäse','Bohnen (Dose)','Paprikapulver'],
-   steps:['Anstechen, ganz bei 200°C 35 Min backen','Aufschneiden','Mit Frischkäse + Bohnen + Paprika füllen'],sub:'Keine Ofenzeit? Mikrowelle 8 Min, einmal wenden.'},
-  {id:'ofengemuese',name:'Ofengemüse mit Feta',type:'abend',emoji:'🧆',time:10,effort:'leicht',tags:['warm','cozy','low_cleanup'],
-   why:'Reinwerfen, der Ofen macht den Rest, ein ruhiger warmer Tagesabschluss.',ing:['TK-Ofengemüse oder Paprika/Zucchini','Feta','Olivenöl','Kräuter'],
-   steps:['Gemüse auf ein Blech, Öl + Salz','Feta darüber bröseln','30 Min bei 200°C'],sub:'Kein frisches Gemüse? TK-Mediterranes Gemüse.'},
+   why:'Omega-3 aus Lachs, leicht und besonders.',ing:['Reis (Beutel)','Räucherlachs','Gurke','Avocado','Sojasauce'],steps:['Mikrowellen-Reis kochen','Mit Lachs + Gurke + Avocado toppen','Soja darüber'],sub:'Räucherfisch nicht ideal? Frischen gegarten Lachs oder Ei nehmen.'},
+  {id:'suesskartoffel',name:'Süßkartoffel aus dem Ofen',type:'mittag',emoji:'🍠',time:5,effort:'leicht',endoGentle:true,tags:['warm','cozy','low_cleanup'],
+   why:'Reinschieben und vergessen, warm und tröstlich, sanft zum Bauch.',ing:['Süßkartoffel','körniger Frischkäse','Bohnen (Dose)','Paprikapulver'],steps:['Anstechen, bei 200°C 35 Min backen','Aufschneiden','Frischkäse + Bohnen + Paprika'],sub:'Keine Ofenzeit? Mikrowelle 8 Min.'},
+  {id:'ofengemuese',name:'Ofengemüse mit Feta',type:'abend',emoji:'🧆',time:10,effort:'leicht',endoGentle:true,tags:['warm','cozy','low_cleanup'],
+   why:'Viel Gemüse, der Ofen macht den Rest, ein ruhiger warmer Abschluss.',ing:['Zucchini/Paprika oder TK-Ofengemüse','Feta','Olivenöl','Kräuter'],steps:['Gemüse auf ein Blech, Öl + Salz','Feta darüber','30 Min bei 200°C'],sub:'Feta weglassen für extra sanft.'},
   {id:'pasta-spinat',name:'Pasta mit Tomate & Spinat',type:'abend',emoji:'🍝',time:15,effort:'leicht',tags:['warm','cozy','treat'],
-   why:'Echtes Comfort Food, warm und einfach, schneller als jede Lieferung.',ing:['Vollkornpasta','passierte Tomaten','TK-Spinat','Knoblauch','Parmesan'],
-   steps:['Pasta kochen','Tomaten + Knoblauch + Spinat erwärmen','Mischen, Parmesan darüber'],sub:'Keine Energie? Fertige Tomatensauce, nur Spinat dazu.'},
-  {id:'lachs-erbsen',name:'Lachsfilet mit TK-Erbsen',type:'abend',emoji:'🍤',time:18,effort:'leicht',tags:['warm','steady_energy'],
-   why:'Einfach und nährend, fühlt sich nach gut für sich sorgen an.',ing:['Lachsfilet (TK oder frisch)','TK-Erbsen','Kartoffeln oder Reis','Zitrone'],
-   steps:['Lachs 4 Min pro Seite braten','Erbsen + Kartoffeln kochen','Zitrone über alles'],sub:'TK-Lachs direkt aus dem Eis ist okay, nur etwas länger garen.'},
-  {id:'gemuese-pfanne',name:'Gemüse-Pfanne mit Hähnchen',type:'abend',emoji:'🥢',time:15,effort:'mittel',tags:['warm','steady_energy'],
-   why:'Eine Pfanne, echtes Essen, ruhige Energie nach einem langen Tag.',ing:['Hähnchenbrust','TK-Wokgemüse','Sojasauce','Reis','Ingwer'],
-   steps:['Hähnchen anbraten','TK-Gemüse + Soja + Ingwer dazu','Über schnellem Reis servieren'],sub:'Kein Hähnchen? Tofu oder Kichererbsen. Müde? Reis weglassen.'},
-  {id:'bowl-suess',name:'Bowl mit Süßkartoffel & Kichererbsen',type:'abend',emoji:'🍲',time:12,effort:'leicht',tags:['warm','cozy','low_cleanup'],
-   why:'Warm, herzhaft und sanft, macht dich angenehm satt.',ing:['Süßkartoffel','Kichererbsen','Babyspinat','Tahini oder Joghurt'],
-   steps:['Süßkartoffelwürfel + Kichererbsen 25 Min rösten','Rohen Spinat dazu','Tahini-Joghurt darüber'],sub:'Kein Tahini? Joghurt + Zitrone + Salz.'},
+   why:'Echtes Comfort Food, warm und einfach.',ing:['Vollkornpasta','passierte Tomaten','TK-Spinat','Knoblauch','Parmesan'],steps:['Pasta kochen','Tomaten + Knoblauch + Spinat erwärmen','Mischen, Parmesan darüber'],sub:'Tomate reizt? Statt Tomatensauce etwas Olivenöl, Spinat und Parmesan.'},
+  {id:'lachs-erbsen',name:'Lachsfilet mit TK-Erbsen',type:'abend',emoji:'🍤',time:18,effort:'leicht',endoGentle:true,tags:['warm','steady_energy'],
+   why:'Omega-3 und nährend, fühlt sich nach gut für sich sorgen an.',ing:['Lachsfilet','TK-Erbsen','Kartoffeln oder Reis','Zitrone'],steps:['Lachs 4 Min pro Seite braten','Erbsen + Kartoffeln kochen','Zitrone darüber'],sub:'TK-Lachs direkt aus dem Eis ist okay, nur etwas länger garen.'},
+  {id:'gemuese-pfanne',name:'Gemüse-Pfanne mit Hähnchen',type:'abend',emoji:'🥢',time:15,effort:'mittel',endoGentle:true,tags:['warm','steady_energy'],
+   why:'Eine Pfanne, viel Gemüse, ruhige Energie nach einem langen Tag.',ing:['Hähnchenbrust','TK-Wokgemüse','Sojasauce','Reis','Ingwer'],steps:['Hähnchen anbraten','TK-Gemüse + Soja + Ingwer dazu','Über Reis servieren'],sub:'Kein Hähnchen? Tofu. Müde? Reis weglassen.'},
+  {id:'bowl-suess',name:'Bowl mit Süßkartoffel & Kichererbsen',type:'abend',emoji:'🍲',time:12,effort:'leicht',endoGentle:true,tags:['warm','cozy','low_cleanup'],
+   why:'Warm, herzhaft und sanft, macht angenehm satt.',ing:['Süßkartoffel','Kichererbsen','Babyspinat','Tahini oder Joghurt'],steps:['Süßkartoffel + Kichererbsen 25 Min rösten','Rohen Spinat dazu','Tahini-Joghurt darüber'],sub:'Bauch empfindlich? Kichererbsen halbieren, mehr Süßkartoffel.'},
   {id:'tortilla-pizza',name:'Tortilla-Pizza (schnell)',type:'abend',emoji:'🍕',time:12,effort:'leicht',tags:['cozy','treat','low_cleanup'],
-   why:'Pizza-Abend-Gefühl in zwölf Minuten, warm und einfach zu lieben.',ing:['Vollkornwrap','passierte Tomaten','Mozzarella','Gemüse nach Wahl'],
-   steps:['Wrap aufs Blech, Tomaten darauf','Mozzarella + Toppings','8 Min bei 220°C'],sub:'Kein Ofen? Pfanne mit Deckel, niedrige Hitze, 6 Min.'},
-  {id:'skyr-nuesse',name:'Skyr mit Nüssen & Honig',type:'snack',emoji:'🍯',time:2,effort:'keine',tags:['time_10','no_cook','treat','cozy'],
-   why:'Ein cremiger kleiner Muntermacher, der wie ein Treat schmeckt.',ing:['Skyr','Walnüsse','Honig'],
-   steps:['Skyr in eine Schüssel','Nüsse darauf','Honig darüber'],sub:'Keine Nüsse? Ein Löffel Nussmus.'},
-  {id:'apfel-erdnuss',name:'Apfel mit Erdnussmus',type:'snack',emoji:'🍏',time:3,effort:'keine',tags:['time_10','no_cook','one_hand','steady_energy'],
-   why:'Süß-salzig und sättigend, beruhigt das 16-Uhr-Tief.',ing:['Apfel','Erdnussmus'],
-   steps:['Apfel in Spalten','Ein Löffel Erdnussmus','Eintunken'],sub:'Kein Apfel? Banane oder Reiswaffeln.'},
-  {id:'gemuesesticks',name:'Gemüsesticks mit Hummus',type:'snack',emoji:'🥕',time:5,effort:'keine',tags:['fresh','no_cook','low_cleanup'],
-   why:'Knackig, frisch und mühelos, schön griffbereit an einem vollen Tag.',ing:['Karotte','Gurke','Paprika','Hummus'],
-   steps:['Gemüse in Sticks schneiden','Hummus in eine kleine Schale','Eintunken'],sub:'Keine Zeit? Fertig geschnittenes Gemüse oder Snack-Möhren.'},
-  {id:'cracker',name:'Vollkorncracker mit Frischkäse & Gurke',type:'snack',emoji:'🫓',time:3,effort:'keine',tags:['time_10','no_cook','one_hand','fresh'],
-   why:'Leicht, schnell und knusprig, ein kurzer ruhiger Reset.',ing:['Vollkorncracker','körniger Frischkäse','Gurke'],
-   steps:['Cracker als Basis','Frischkäse darauf','Gurkenscheibe oben drauf'],sub:'Keine Gurke? Radieschen oder Tomate.'},
+   why:'Pizza-Abend-Gefühl in zwölf Minuten, einfach zu lieben.',ing:['Vollkornwrap','passierte Tomaten','Mozzarella','Gemüse'],steps:['Wrap aufs Blech, Tomaten darauf','Mozzarella + Toppings','8 Min bei 220°C'],sub:'Kein Ofen? Pfanne mit Deckel, 6 Min.'},
+  {id:'skyr-nuesse',name:'Skyr mit Nüssen & Honig',type:'snack',emoji:'🍯',time:2,effort:'keine',endoGentle:true,tags:['time_10','no_cook','treat','cozy'],
+   why:'Ein cremiger kleiner Muntermacher, der wie ein Treat schmeckt.',ing:['Skyr','Walnüsse','Honig'],steps:['Skyr in eine Schüssel','Nüsse darauf','Honig darüber'],sub:'Keine Nüsse? Nussmus.'},
+  {id:'apfel-erdnuss',name:'Apfel mit Erdnussmus',type:'snack',emoji:'🍏',time:3,effort:'keine',endoGentle:true,tags:['time_10','no_cook','one_hand','steady_energy'],
+   why:'Süß-salzig und sättigend, beruhigt das 16-Uhr-Tief.',ing:['Apfel','Erdnussmus'],steps:['Apfel in Spalten','Ein Löffel Erdnussmus','Eintunken'],sub:'Kein Apfel? Banane.'},
+  {id:'gemuesesticks',name:'Gemüsesticks mit Hummus',type:'snack',emoji:'🥕',time:5,effort:'keine',endoGentle:true,tags:['fresh','no_cook','low_cleanup'],
+   why:'Knackig, frisch und mühelos.',ing:['Karotte','Gurke','Paprika','Hummus'],steps:['Gemüse in Sticks','Hummus in eine Schale','Eintunken'],sub:'Keine Zeit? Snack-Möhren.'},
+  {id:'cracker',name:'Vollkorncracker mit Frischkäse',type:'snack',emoji:'🫓',time:3,effort:'keine',endoGentle:true,tags:['time_10','no_cook','one_hand','fresh'],
+   why:'Leicht, schnell und knusprig, ein ruhiger Reset.',ing:['Vollkorncracker','körniger Frischkäse','Gurke'],steps:['Cracker als Basis','Frischkäse darauf','Gurke oben drauf'],sub:'Keine Gurke? Radieschen.'},
   {id:'banane-schoko',name:'Banane mit dunkler Schokolade',type:'snack',emoji:'🍌',time:2,effort:'keine',tags:['treat','cozy','no_cook'],
-   why:'Ja, bitte. Ein kleiner, ehrlich schöner Treat, der in deinen Tag passt.',ing:['Banane','dunkle Schokolade'],
-   steps:['Banane in Scheiben','Schokostücke dazu','Langsam genießen'],sub:'Schokolade 20 Sek schmelzen für extra cozy.'},
-  {id:'quark-schoko',name:'Magerquark-Schoko-Creme',type:'snack',emoji:'🍫',time:3,effort:'keine',tags:['treat','no_cook','cozy','steady_energy'],
-   why:'Dessert-Gefühl, echtes Essen, gut zu dir und richtig sättigend.',ing:['Magerquark','Backkakao','Honig oder Banane'],
-   steps:['Quark + Kakao verrühren','Mit Honig oder Banane süßen','Auslöffeln'],sub:'Kein Kakao? Marmelade oder Erdnussmus einrühren.'},
+   why:'Ein kleiner, ehrlich schöner Treat, der in deinen Tag passt.',ing:['Banane','dunkle Schokolade'],steps:['Banane in Scheiben','Schokostücke dazu','Langsam genießen'],sub:'Schokolade kurz schmelzen für extra cozy.'},
+  {id:'quark-schoko',name:'Magerquark-Schoko-Creme',type:'snack',emoji:'🍫',time:3,effort:'keine',endoGentle:true,tags:['treat','no_cook','cozy','steady_energy'],
+   why:'Dessert-Gefühl, echtes Essen, richtig sättigend.',ing:['Magerquark','Backkakao','Honig oder Banane'],steps:['Quark + Kakao verrühren','Süßen','Auslöffeln'],sub:'Kein Kakao? Marmelade einrühren.'},
 ];
 
-const SOS = [
-  'Vollkornbrot + körniger Frischkäse + Tomate + Salz. Ein Teller, zwei Minuten.',
+const SOS=[
+  'Vollkornbrot + körniger Frischkäse + Gurke + Salz. Ein Teller, zwei Minuten.',
   'Skyr + TK-Beeren (in der Schüssel auftauen) + Honig + Haferflocken.',
-  'Räucherlachs direkt aus der Packung + Vollkorncracker + ein Spritzer Zitrone.',
-  'Hummus + Vollkornwrap + vorgewaschener Babyspinat, kalt eingerollt.',
-  'Kichererbsen (Dose) abspülen + Olivenöl + Salz + Paprika. Mit dem Löffel, ehrlich.',
-  'Mozzarella + Kirschtomaten + ein paar Basilikumblätter + gutes Olivenöl.',
+  'Warmer Haferbrei aus der Mikrowelle mit Banane und Zimt.',
+  'Hummus + Vollkornwrap + Babyspinat, kalt eingerollt.',
+  'Süßkartoffel aus der Mikrowelle (8 Min) mit etwas Olivenöl und Salz.',
+  'Reis-Beutel + TK-Erbsen + ein Ei. Warm, weich, sanft.',
   'Magerquark + ein Klecks Marmelade + Nüsse. Süß, sättigend, kein Herd.',
-  'Vorgegarte Hähnchenstreifen (Kühlregal) + fertiger Salat + Dressing.',
+  'Vorgegarte Hähnchenstreifen + fertiger Salat.',
 ];
 
-const MOODS = [
+const MOODS=[
+  {key:'endoGentle',label:'🌸 Extra sanft'},
   {key:'time_10',label:'⏱️ 10 Minuten'},
   {key:'low_energy',label:'🛋️ Keine Koch-Energie'},
   {key:'warm',label:'🔥 Etwas Warmes'},
   {key:'fresh',label:'🥗 Frisch'},
   {key:'cozy',label:'🧸 Cozy / Comfort'},
   {key:'treat',label:'🍫 Was Schönes'},
-  {key:'busy_day',label:'🎬 Langer Tag'},
   {key:'no_cook',label:'🧊 Ohne Kochen'},
   {key:'one_hand',label:'🤲 Mit einer Hand'},
   {key:'low_cleanup',label:'🥄 Wenig Abwasch'},
   {key:'steady_energy',label:'⚡ Ruhige Energie'},
-  {key:'morning_quick',label:'🌅 Schneller Start'},
 ];
-/* low_energy maps to no_cook+leicht meals; treat as alias */
-
 const TYPES=[['all','Alles'],['frühstück','🌅 Frühstück'],['mittag','☀️ Mittag'],['abend','🌙 Abend'],['snack','🍎 Snacks']];
 const DAYS=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
 const SLOTS=[['frühstück','Frühstück'],['mittag','Mittag'],['abend','Abend'],['snack','Snack']];
-
-/* shopping aisle order (first regex match wins) */
 const AISLES=[
   {label:'❄️ Tiefkühl (TK)', re:/^TK-|Tiefkühl/i},
   {label:'🍫 Schönes', re:/Schokolade|Marmelade/i},
   {label:'🐟 Fleisch & Fisch', re:/Hähnchen|Lachs|Räucherlachs|Fisch|Thunfisch|Pute/i},
-  {label:'🧀 Kühlregal (Molkerei)', re:/Skyr|Magerquark|Quark|Frischkäse|Feta|Mozzarella|Parmesan|Käse|Ei\b|Eier|Butter|Milch|Haferdrink|Joghurt|Hummus|Tortellini|Gnocchi|Maultaschen|Spätzle/i},
-  {label:'🍞 Brot & Backwaren', re:/Brot|Wrap|Cracker|Brötchen|Knäcke|Naan|Müsli/i},
-  {label:'🧂 Öle, Saucen & Gewürze', re:/Öl|Soja|Honig|Tahini|Erdnussmus|Nussmus|Zimt|Kreuzkümmel|Paprikapulver|Salz|Pfeffer|Curry|Balsamico|Kakao|Pesto|Brühe|Dressing/i},
+  {label:'🧀 Kühlregal (Molkerei)', re:/Skyr|Magerquark|Quark|Frischkäse|Feta|Mozzarella|Parmesan|Käse|Ei\b|Eier|Butter|Milch|Haferdrink|Joghurt|Hummus|Spätzle/i},
+  {label:'🍞 Brot & Backwaren', re:/Brot|Wrap|Cracker|Brötchen|Knäcke|Müsli/i},
+  {label:'🧂 Öle, Saucen & Gewürze', re:/Öl|Soja|Honig|Tahini|Erdnussmus|Nussmus|Zimt|Kreuzkümmel|Paprikapulver|Salz|Pfeffer|Curry|Balsamico|Kakao|Brühe/i},
   {label:'🥬 Obst & Gemüse', re:/Apfel|Banane|Beere|Gurke|Tomate|Paprika|Karotte|Möhre|Avocado|Spinat|Salat|Zwiebel|Knoblauch|Ingwer|Brokkoli|Süßkartoffel|Kartoffel|Zucchini|Kräuter|Schnittlauch|Basilikum|Zitrone|Radieschen|Birne|Gemüse/i},
-  {label:'🥫 Konserven & Trockenes', re:/Kichererbsen|Linsen|Bohnen|passierte|Couscous|Reis|Haferflocken|Nüsse|Walnüsse|Mandeln|Chia|Pasta|Spaghetti|Kokosmilch|Mais/i},
+  {label:'🥫 Konserven & Trockenes', re:/Kichererbsen|Linsen|Bohnen|passierte|Couscous|Reis|Haferflocken|Nüsse|Walnüsse|Mandeln|Chia|Pasta|Spaghetti|Mais/i},
 ];
-function aisleFor(name){ for(const a of AISLES){ if(a.re.test(name)) return a.label; } return '🛒 Sonstiges'; }
+function aisleFor(n){for(const a of AISLES)if(a.re.test(n))return a.label;return'🛒 Sonstiges';}
 
-/* ============ state ============ */
-const KEY='hellen_meals_v2';
+const KEY='hellen_meals_v3';
 let state=load();
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||blank();}catch(e){return blank();}}
-function blank(){const week={};DAYS.forEach(d=>week[d]={});return{week,checked:{},loves:[]};}
+function blank(){const w={};DAYS.forEach(d=>w[d]={});return{week:w,checked:{},liked:[]};}
 function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+function mealById(id){return [...HELLEN_LOVES.map((m,i)=>({...m,id:'love-'+i,love:true})),...MEALS].find(m=>m.id===id);}
 
-let typeFilter='all', moods=new Set(), showAllMoods=false;
-function allMeals(){return [...HELLEN_LOVES.map((m,i)=>({...m,id:'love-'+i,love:true})), ...state.loves.map((m,i)=>({...m,id:'mylove-'+i,love:true})), ...MEALS];}
-function mealById(id){return allMeals().find(m=>m.id===id);}
+let typeFilter='all',moods=new Set(),showAllMoods=false;
 
-/* ============ render ============ */
-function renderTypes(){
-  const el=document.getElementById('types');el.innerHTML='';
-  TYPES.forEach(([k,l])=>{const b=document.createElement('button');b.className='type'+(typeFilter===k?' on':'');b.textContent=l;
-    b.onclick=()=>{typeFilter=k;renderTypes();renderGrid();renderLoveRow();};el.appendChild(b);});
+/* ===== SWIPE ===== */
+let deck=[],deckIdx=0;
+function buildDeck(){
+  deck=MEALS.slice();
+  // light shuffle by interleaving (no Math.random dependency needed)
+  renderDeck();
 }
-function renderMoods(){
-  const el=document.getElementById('moods');el.innerHTML='';
-  const list=showAllMoods?MOODS:MOODS.slice(0,6);
-  list.forEach(m=>{const b=document.createElement('button');b.className='mood'+(moods.has(m.key)?' on':'');b.textContent=m.label;
-    b.onclick=()=>{moods.has(m.key)?moods.delete(m.key):moods.add(m.key);renderMoods();renderGrid();};el.appendChild(b);});
-  document.getElementById('moreToggle').textContent=showAllMoods?'– weniger':'+ mehr Stimmungen';
-}
-function matchMood(m){
-  if(moods.size===0)return 1;
-  let c=0;moods.forEach(k=>{
-    if(m.tags&&m.tags.includes(k))c++;
-    if(k==='low_energy'&&m.tags&&(m.tags.includes('no_cook')||m.effort==='keine'))c++;
+function renderDeck(){
+  const d=document.getElementById('deck');d.innerHTML='';
+  const remaining=deck.slice(deckIdx,deckIdx+3).reverse();
+  if(deckIdx>=deck.length){
+    d.innerHTML=`<div class="deckdone"><span class="big">🌿</span>Alles durchgeschaut! Deine Favoriten findest du unter „Alle Gerichte" mit ❤️.<br><br><button class="btn ghost" id="restartDeck">Nochmal von vorne</button></div>`;
+    document.getElementById('restartDeck').onclick=()=>{deckIdx=0;renderDeck();};
+    updateLikeCount();return;
+  }
+  remaining.forEach((m,i)=>{
+    const isTop=(i===remaining.length-1);
+    const c=document.createElement('div');
+    c.className='sc'+(m.endoGentle?' gentle':'');
+    c.style.transform=`scale(${1-(remaining.length-1-i)*0.04}) translateY(${(remaining.length-1-i)*10}px)`;
+    c.style.zIndex=i;
+    c.innerHTML=`<div class="stamp like">MAG ICH</div><div class="stamp nope">NÖ</div>
+      <div class="emoji">${m.emoji}</div>
+      <div class="body">
+        <h3>${m.name}</h3>
+        <div class="meta">
+          <span class="pill time">⏱ ${m.time} Min</span>
+          <span class="pill effort">${m.effort==='keine'?'kein Kochen':m.effort}</span>
+          ${m.endoGentle?'<span class="pill gentle">🌸 extra sanft</span>':''}
+        </div>
+        <div class="why">${m.why}</div>
+        ${m.sub?`<div class="why" style="font-size:12.5px">💡 ${m.sub}</div>`:''}
+      </div>`;
+    d.appendChild(c);
+    if(isTop)makeDraggable(c,m);
   });
-  return c;
+  updateLikeCount();
 }
+function updateLikeCount(){
+  const n=state.liked.length;
+  document.getElementById('likeCount').textContent=n?`❤️ ${n} ${n===1?'Gericht':'Gerichte'} gespeichert`:'';
+}
+function makeDraggable(card,meal){
+  let sx=0,sy=0,dx=0,dy=0,drag=false;
+  const like=card.querySelector('.stamp.like'),nope=card.querySelector('.stamp.nope');
+  const start=e=>{drag=true;const p=e.touches?e.touches[0]:e;sx=p.clientX;sy=p.clientY;card.style.transition='none';};
+  const move=e=>{if(!drag)return;const p=e.touches?e.touches[0]:e;dx=p.clientX-sx;dy=p.clientY-sy;
+    card.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/18}deg)`;
+    like.style.opacity=Math.max(0,dx/90);nope.style.opacity=Math.max(0,-dx/90);};
+  const end=()=>{if(!drag)return;drag=false;card.style.transition='.3s ease';
+    if(dx>95){fly(1);}else if(dx<-95){fly(-1);}else{card.style.transform='';like.style.opacity=0;nope.style.opacity=0;}};
+  function fly(dir){card.style.transform=`translate(${dir*600}px,${dy}px) rotate(${dir*30}deg)`;card.style.opacity=0;
+    if(dir>0&&!state.liked.includes(meal.id)){state.liked.push(meal.id);save();}
+    setTimeout(()=>{deckIdx++;renderDeck();},260);}
+  card.addEventListener('mousedown',start);window.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  card.addEventListener('touchstart',start,{passive:true});card.addEventListener('touchmove',move,{passive:true});card.addEventListener('touchend',end);
+  card._fly=fly;
+}
+function swipeBtn(dir){
+  const top=document.querySelector('#deck .sc:last-child');
+  if(top&&top._fly)top._fly(dir);
+}
+document.getElementById('swYes').onclick=()=>swipeBtn(1);
+document.getElementById('swNo').onclick=()=>swipeBtn(-1);
+
+/* ===== browse ===== */
+function renderTypes(){const el=document.getElementById('types');el.innerHTML='';
+  TYPES.forEach(([k,l])=>{const b=document.createElement('button');b.className='type'+(typeFilter===k?' on':'');b.textContent=l;
+    b.onclick=()=>{typeFilter=k;renderTypes();renderGrid();renderLoveRow();};el.appendChild(b);});}
+function renderMoods(){const el=document.getElementById('moods');el.innerHTML='';
+  (showAllMoods?MOODS:MOODS.slice(0,6)).forEach(m=>{const b=document.createElement('button');b.className='mood'+(moods.has(m.key)?' on':'');b.textContent=m.label;
+    b.onclick=()=>{moods.has(m.key)?moods.delete(m.key):moods.add(m.key);renderMoods();renderGrid();};el.appendChild(b);});
+  document.getElementById('moreToggle').textContent=showAllMoods?'– weniger':'+ mehr Stimmungen';}
+function matchMood(m){if(!moods.size)return 1;let c=0;moods.forEach(k=>{
+  if(k==='endoGentle'){if(m.endoGentle)c++;return;}
+  if(m.tags&&m.tags.includes(k))c++;
+  if(k==='low_energy'&&(m.endoGentle||(m.tags&&m.tags.includes('no_cook'))||m.effort==='keine'))c++;});return c;}
+function liked(m){return state.liked.includes(m.id);}
 function card(m,isLove){
-  const div=document.createElement('div');
-  div.className='meal'+(isLove?' love':'');
-  div.innerHTML=`
+  const div=document.createElement('div');div.className='meal'+(isLove?' love':'')+(m.endoGentle?' gentle':'');
+  div.innerHTML=`${(!isLove&&liked(m))?'<div class="heart">❤️</div>':''}
     <div class="emoji">${m.emoji||'🍽️'}</div>
     <div class="body">
       <h3>${m.name}</h3>
       <div class="meta">
         ${m.time?`<span class="pill time">⏱ ${m.time} Min</span>`:''}
-        ${m.effort?`<span class="pill effort">${m.effort==='keine'?'kein Kochen':m.effort==='leicht'?'leicht':'etwas Aufwand'}</span>`:''}
-        ${isLove?`<span class="pill lovetag">❤ von Samuel</span>`:''}
+        ${m.effort?`<span class="pill effort">${m.effort==='keine'?'kein Kochen':m.effort}</span>`:''}
+        ${m.endoGentle?'<span class="pill gentle">🌸 sanft</span>':''}
+        ${isLove?'<span class="pill tag">❤ von Samuel</span>':''}
       </div>
       <div class="why ${isLove?'lovewhy':''}">${m.why||''}</div>
       ${m.ing?`<details class="recipe"><summary>Zutaten & Zubereitung</summary>
@@ -367,125 +450,88 @@ function card(m,isLove){
     </div>`;
   return div;
 }
-function renderLoveRow(){
-  const el=document.getElementById('loveRow');el.innerHTML='';
-  const loves=allMeals().filter(m=>m.love).filter(m=>typeFilter==='all'||m.type===typeFilter);
+function renderLoveRow(){const el=document.getElementById('loveRow');el.innerHTML='';
+  const loves=HELLEN_LOVES.map((m,i)=>({...m,id:'love-'+i,love:true})).filter(m=>typeFilter==='all'||m.type===typeFilter);
   if(!loves.length)return;
-  const lbl=document.createElement('div');lbl.className='rowlabel';
-  lbl.innerHTML='❤️ Was du liebst <span class="hint">ganz oben, weil du es bist</span>';
-  el.appendChild(lbl);
-  const grid=document.createElement('div');grid.className='grid';grid.style.marginBottom='26px';
-  loves.forEach(m=>grid.appendChild(card(m,true)));
-  el.appendChild(grid);
-  wireAdd(el);
-}
-function renderGrid(){
-  const grid=document.getElementById('grid');grid.innerHTML='';
+  const lbl=document.createElement('div');lbl.className='rowlabel';lbl.innerHTML='❤️ Was du liebst <span class="hint">ganz oben, weil du es bist</span>';
+  el.appendChild(lbl);const grid=document.createElement('div');grid.className='grid';grid.style.marginBottom='26px';
+  loves.forEach(m=>grid.appendChild(card(m,true)));el.appendChild(grid);wireAdd(el);}
+function renderGrid(){const grid=document.getElementById('grid');grid.innerHTML='';
   let list=MEALS.filter(m=>typeFilter==='all'||m.type===typeFilter);
-  if(moods.size>0){list=list.map(m=>({m,score:matchMood(m)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).map(x=>x.m);}
-  if(typeFilter==='all'){
-    const lbl=document.createElement('div');// no extra label, keep clean
-  }
-  if(!list.length){grid.innerHTML='<div class="empty-state"><span class="big">🍃</span>Keine perfekte Übereinstimmung gerade. Nimm eine Stimmung weg, dann zeige ich dir mehr.</div>';return;}
-  list.forEach(m=>grid.appendChild(card(m,false)));
-  wireAdd(grid);
-}
-function wireAdd(scope){
-  scope.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>toggleDayPicker(b.dataset.add));
-}
-function toggleDayPicker(id){
-  const dp=document.getElementById('dp-'+id);
+  if(moods.size>0)list=list.map(m=>({m,s:matchMood(m)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.m);
+  // liked first
+  list.sort((a,b)=>(liked(b)?1:0)-(liked(a)?1:0));
+  if(!list.length){grid.innerHTML='<div class="empty-state"><span class="big">🍃</span>Keine Übereinstimmung gerade. Nimm eine Stimmung weg.</div>';return;}
+  list.forEach(m=>grid.appendChild(card(m,false)));wireAdd(grid);}
+function wireAdd(scope){scope.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>toggleDayPicker(b.dataset.add));}
+function toggleDayPicker(id){const dp=document.getElementById('dp-'+id);
   if(dp.style.display==='flex'){dp.style.display='none';return;}
-  document.querySelectorAll('.daypick').forEach(x=>x.style.display='none');
-  dp.innerHTML='';
-  DAYS.forEach(d=>{const b=document.createElement('button');b.textContent=d.slice(0,2);
-    b.onclick=()=>{addToWeek(d,id);dp.style.display='none';};dp.appendChild(b);});
-  dp.style.display='flex';
-}
-function addToWeek(day,id){
-  const m=mealById(id);const slot=m.type||'mittag';
-  state.week[day][slot]={id,name:m.name,emoji:m.emoji||'🍽️',ing:m.ing||[]};
-  save();renderWeek();renderShop();toast(`${m.name} → ${day}`);
-}
+  document.querySelectorAll('.daypick').forEach(x=>x.style.display='none');dp.innerHTML='';
+  DAYS.forEach(d=>{const b=document.createElement('button');b.textContent=d.slice(0,2);b.onclick=()=>{addToWeek(d,id);dp.style.display='none';};dp.appendChild(b);});
+  dp.style.display='flex';}
+function addToWeek(day,id){const m=mealById(id);const slot=m.type||'mittag';
+  state.week[day][slot]={id,name:m.name,emoji:m.emoji||'🍽️',ing:m.ing||[]};save();renderWeek();renderShop();toast(`${m.name} → ${day}`);}
 
-function renderSOS(){
-  const el=document.getElementById('sosList');
-  el.innerHTML=SOS.map((s,i)=>`<div class="sos-item"><span class="n">${i+1}</span><span>${s}</span></div>`).join('');
-}
-function renderWeek(){
-  const el=document.getElementById('weekGrid');el.innerHTML='';let any=false;
-  DAYS.forEach(d=>{
-    const day=document.createElement('div');day.className='day';let html='';
-    SLOTS.forEach(([s,lbl])=>{
-      const e=state.week[d][s];if(e)any=true;
-      html+=`<div class="slot"><span class="label">${lbl}</span>
-        <span class="meal-name ${e?'':'empty'}">${e?e.emoji+' '+e.name:'— noch nichts —'}</span>
-        ${e?`<button class="rm" data-d="${d}" data-s="${s}">✕</button>`:''}</div>`;
-    });
-    day.innerHTML=`<h3>${d}</h3>${html}`;el.appendChild(day);
-  });
-  if(!any)el.innerHTML='<div class="empty-state"><span class="big">🗓️</span>Deine Woche ist leer. Geh zu "Was esse ich?" und tipp bei allem, das gut klingt, auf "zu meiner Woche".</div>';
-  el.querySelectorAll('.rm').forEach(b=>b.onclick=()=>{delete state.week[b.dataset.d][b.dataset.s];save();renderWeek();renderShop();});
-}
-function renderShop(){
-  const el=document.getElementById('shopList');const counts={};let total=0;
+function renderSOS(){document.getElementById('sosList').innerHTML=SOS.map((s,i)=>`<div class="sos-item"><span class="n">${i+1}</span><span>${s}</span></div>`).join('');}
+function renderWeek(){const el=document.getElementById('weekGrid');el.innerHTML='';let any=false;
+  DAYS.forEach(d=>{const day=document.createElement('div');day.className='day';let html='';
+    SLOTS.forEach(([s,lbl])=>{const e=state.week[d][s];if(e)any=true;
+      html+=`<div class="slot"><span class="label">${lbl}</span><span class="meal-name ${e?'':'empty'}">${e?e.emoji+' '+e.name:'— noch nichts —'}</span>${e?`<button class="rm" data-d="${d}" data-s="${s}">✕</button>`:''}</div>`;});
+    day.innerHTML=`<h3>${d}</h3>${html}`;el.appendChild(day);});
+  if(!any)el.innerHTML='<div class="empty-state"><span class="big">🗓️</span>Deine Woche ist leer. Wisch dich durch „Entdecken" oder tipp bei „Alle Gerichte" auf „zu meiner Woche".</div>';
+  el.querySelectorAll('.rm').forEach(b=>b.onclick=()=>{delete state.week[b.dataset.d][b.dataset.s];save();renderWeek();renderShop();});}
+function renderShop(){const el=document.getElementById('shopList');const counts={};let total=0;
   DAYS.forEach(d=>SLOTS.forEach(([s])=>{const e=state.week[d][s];if(!e)return;total++;(e.ing||[]).forEach(i=>counts[i]=(counts[i]||0)+1);}));
   if(!total){el.innerHTML='<div class="empty-state"><span class="big">🛒</span>Plane erst deine Woche, dann füllt sich die Liste von selbst, sortiert nach Supermarkt-Reihenfolge.</div>';return;}
-  const groups={};AISLES.forEach(a=>groups[a.label]=[]);groups['🛒 Sonstiges']=[];
-  Object.keys(counts).sort().forEach(name=>{
-    const line=counts[name]>1?`${name} <span style="color:var(--muted)">×${counts[name]}</span>`:name;
-    (groups[aisleFor(name)]=groups[aisleFor(name)]||[]).push(line);
-  });
-  el.innerHTML='';
-  AISLES.concat([{label:'🛒 Sonstiges'}]).forEach(a=>{
-    const items=groups[a.label];if(!items||!items.length)return;
+  const groups={};Object.keys(counts).sort().forEach(name=>{const g=aisleFor(name);(groups[g]=groups[g]||[]).push(counts[name]>1?`${name} <span style="color:var(--muted)">×${counts[name]}</span>`:name);});
+  el.innerHTML='';AISLES.concat([{label:'🛒 Sonstiges'}]).forEach(a=>{const items=groups[a.label];if(!items||!items.length)return;
     const box=document.createElement('div');box.className='shop-group';
-    box.innerHTML=`<h3>${a.label}</h3>`+items.map((line,i)=>{
-      const k=a.label+':'+i+':'+line;const ck=state.checked[k]?'checked':'';
-      return `<div class="shop-item ${ck?'checked':''}"><input type="checkbox" id="${k}" ${ck} data-k="${k}"><label for="${k}">${line}</label></div>`;
-    }).join('');
-    el.appendChild(box);
-  });
-  el.querySelectorAll('input[type=checkbox]').forEach(c=>c.onchange=()=>{state.checked[c.dataset.k]=c.checked;save();c.closest('.shop-item').classList.toggle('checked',c.checked);});
-}
-function copyList(){
-  const counts={};DAYS.forEach(d=>SLOTS.forEach(([s])=>{const e=state.week[d][s];if(!e)return;(e.ing||[]).forEach(i=>counts[i]=(counts[i]||0)+1);}));
+    box.innerHTML=`<h3>${a.label}</h3>`+items.map((line,i)=>{const k=a.label+':'+i+':'+line;const ck=state.checked[k]?'checked':'';
+      return `<div class="shop-item ${ck?'checked':''}"><input type="checkbox" id="${k}" ${ck} data-k="${k}"><label for="${k}">${line}</label></div>`;}).join('');
+    el.appendChild(box);});
+  el.querySelectorAll('input[type=checkbox]').forEach(c=>c.onchange=()=>{state.checked[c.dataset.k]=c.checked;save();c.closest('.shop-item').classList.toggle('checked',c.checked);});}
+function copyList(){const counts={};DAYS.forEach(d=>SLOTS.forEach(([s])=>{const e=state.week[d][s];if(!e)return;(e.ing||[]).forEach(i=>counts[i]=(counts[i]||0)+1);}));
   if(!Object.keys(counts).length){toast('Noch nichts zu kopieren');return;}
-  const lines=['🛒 Einkaufsliste'];
-  AISLES.concat([{label:'🛒 Sonstiges'}]).forEach(a=>{
-    const items=Object.keys(counts).filter(n=>aisleFor(n)===a.label);
-    if(!items.length)return;lines.push('','— '+a.label+' —');
-    items.sort().forEach(n=>lines.push('• '+n+(counts[n]>1?` ×${counts[n]}`:'')));
-  });
-  navigator.clipboard.writeText(lines.join('\n')).then(()=>toast('Kopiert! 🤍'));
-}
+  const lines=['🛒 Einkaufsliste'];AISLES.concat([{label:'🛒 Sonstiges'}]).forEach(a=>{const items=Object.keys(counts).filter(n=>aisleFor(n)===a.label);
+    if(!items.length)return;lines.push('','— '+a.label+' —');items.sort().forEach(n=>lines.push('• '+n+(counts[n]>1?` ×${counts[n]}`:'')));});
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>toast('Kopiert! 🤍'));}
 
-/* add a meal Hellen loves (she can add her own) */
-function addLovePrompt(){
-  const name=prompt('Wie heißt das Gericht, das du liebst?');if(!name)return;
-  const why=prompt('Was magst du daran? (optional)')||'';
-  const ingRaw=prompt('Zutaten, mit Komma getrennt (optional, für die Einkaufsliste)')||'';
-  const ing=ingRaw.split(',').map(s=>s.trim()).filter(Boolean);
-  state.loves.push({name,why,ing,type:'abend',emoji:'❤️',tags:['cozy']});save();
-  renderLoveRow();renderGrid();toast('Hinzugefügt ❤️');
-}
+/* ===== feedback ===== */
+const fbModal=document.getElementById('fbModal');
+document.getElementById('fbOpen').onclick=()=>{fbModal.classList.add('show');};
+document.getElementById('fbClose').onclick=()=>fbModal.classList.remove('show');
+fbModal.onclick=e=>{if(e.target===fbModal)fbModal.classList.remove('show');};
+document.getElementById('fbSend').onclick=()=>{
+  const t=document.getElementById('fbText').value.trim();if(!t){toast('Schreib kurz, was du dir wünschst');return;}
+  if(FORMSPREE){fetch(FORMSPREE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,from:'Hellen, Essens-Tool'})})
+      .then(()=>{toast('Gesendet, danke 🤍');fbModal.classList.remove('show');document.getElementById('fbText').value='';})
+      .catch(()=>{toast('Hat nicht geklappt, kopier es und schick es Samuel');});
+  }else{
+    const subj=encodeURIComponent('Essens-Tool: Wunsch von Hellen');
+    const body=encodeURIComponent(t);
+    window.location.href=`mailto:${FEEDBACK_EMAIL}?subject=${subj}&body=${body}`;
+    fbModal.classList.remove('show');
+  }
+};
+document.getElementById('fbCopy').onclick=()=>{const t=document.getElementById('fbText').value.trim();
+  navigator.clipboard.writeText(t||'').then(()=>toast('Kopiert, schick es Samuel 🤍'));};
 
-/* tabs */
+/* ===== tabs ===== */
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById(t.dataset.panel).classList.add('active');
+  if(t.dataset.panel==='browse'){renderLoveRow();renderGrid();}
 });
 document.getElementById('sosBtn').onclick=()=>document.getElementById('sosList').classList.toggle('show');
 document.getElementById('moreToggle').onclick=()=>{showAllMoods=!showAllMoods;renderMoods();};
-document.getElementById('clearWeek').onclick=()=>{if(confirm('Ganze Woche leeren?')){const l=state.loves;state=blank();state.loves=l;save();renderWeek();renderShop();}};
+document.getElementById('clearWeek').onclick=()=>{if(confirm('Ganze Woche leeren?')){const l=state.liked;state=blank();state.liked=l;save();renderWeek();renderShop();}};
 document.getElementById('copyList').onclick=copyList;
 document.getElementById('resetChecks').onclick=()=>{state.checked={};save();renderShop();};
-document.getElementById('addLove').onclick=addLovePrompt;
 
-let toastTimer;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2000);}
+let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2000);}
 
-renderTypes();renderMoods();renderSOS();renderLoveRow();renderGrid();renderWeek();renderShop();
+renderTypes();renderMoods();renderSOS();renderLoveRow();renderGrid();renderWeek();renderShop();buildDeck();
 </script>
 </body>
 </html>
