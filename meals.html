@@ -55,6 +55,17 @@
   .pill.effort{background:#F6F0E2;color:#9a7d3e}
   .pill.gentle{background:#EAF1E8;color:#5e7a5c}
   .pill.tag{background:#FBEFE7;color:var(--clay-dark)}
+  .pill.kcal{background:#F1ECF6;color:#7a6a8a}
+  .kcalset{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;margin-bottom:14px;font-size:14px}
+  .kcalset .kcalrow{display:flex;align-items:center;gap:9px;font-weight:600;cursor:pointer}
+  .kcalset input[type=checkbox]{width:18px;height:18px;accent-color:var(--clay)}
+  .kcalset #kcalGoalWrap{margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted)}
+  .kcalset input[type=number]{width:96px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:var(--sans);font-size:14px;color:var(--ink)}
+  .kcalhint{flex-basis:100%;font-size:12px;color:var(--muted);margin-top:2px}
+  .daytotal{font-size:12.5px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+  .daytotal b{color:var(--clay-dark)}
+  .kbar{height:6px;border-radius:3px;background:var(--soft);margin-top:5px;overflow:hidden}
+  .kbar i{display:block;height:100%;background:var(--sage)}
   .stamp{position:absolute;top:22px;font-family:var(--serif);font-size:30px;font-weight:700;padding:4px 14px;border-radius:12px;border:3px solid;opacity:0;transform:rotate(-12deg)}
   .stamp.like{right:18px;color:var(--sage);border-color:var(--sage)}
   .stamp.nope{left:18px;color:var(--love);border-color:var(--love);transform:rotate(12deg)}
@@ -205,6 +216,13 @@
   <!-- WEEK -->
   <section class="panel" id="week">
     <div class="toolbar"><button class="btn ghost" id="clearWeek">Woche leeren</button></div>
+    <div class="kcalset" id="kcalSet">
+      <label class="kcalrow"><input type="checkbox" id="kcalToggle"> Kalorien & Tagesziel anzeigen</label>
+      <div id="kcalGoalWrap" style="display:none">
+        <span>Tagesziel:</span><input type="number" id="kcalGoal" placeholder="z.B. 1800" min="0" step="50"> kcal
+        <div class="kcalhint">Nur grobe Schätzungen, zur Orientierung, kein Grund zur Sorge. 🤍</div>
+      </div>
+    </div>
     <div class="week" id="weekGrid"></div>
   </section>
 
@@ -341,10 +359,19 @@ const AISLES=[
 ];
 function aisleFor(n){for(const a of AISLES)if(a.re.test(n))return a.label;return'🛒 Sonstiges';}
 
+const KCAL={
+  'skyr-bowl':300,'porridge':320,'overnight':330,'ruehrei':280,'quark-apfel':250,'avo-brot':350,
+  'couscous':400,'linsensuppe':350,'haehnchen-wrap':420,'kichererbsen-bowl':420,'lachs-bowl':480,'suesskartoffel':380,
+  'ofengemuese':380,'pasta-spinat':520,'lachs-erbsen':520,'gemuese-pfanne':480,'bowl-suess':450,'tortilla-pizza':450,
+  'skyr-nuesse':220,'apfel-erdnuss':200,'gemuesesticks':150,'cracker':180,'banane-schoko':180,'quark-schoko':200,
+  'love-0':600,'love-1':350
+};
+function kcalOf(m){return (m&&(m.kcal!=null?m.kcal:KCAL[m.id]))||null;}
+
 const KEY='hellen_meals_v3';
 let state=load();
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||blank();}catch(e){return blank();}}
-function blank(){const w={};DAYS.forEach(d=>w[d]={});return{week:w,checked:{},liked:[]};}
+function blank(){const w={};DAYS.forEach(d=>w[d]={});return{week:w,checked:{},liked:[],showKcal:false,kcalGoal:''};}
 function save(){localStorage.setItem(KEY,JSON.stringify(state));}
 function mealById(id){return [...HELLEN_LOVES.map((m,i)=>({...m,id:'love-'+i,love:true})),...MEALS].find(m=>m.id===id);}
 
@@ -379,6 +406,7 @@ function renderDeck(){
           <span class="pill time">⏱ ${m.time} Min</span>
           <span class="pill effort">${m.effort==='keine'?'kein Kochen':m.effort}</span>
           ${m.endoGentle?'<span class="pill gentle">🌸 extra sanft</span>':''}
+          ${state.showKcal&&kcalOf(m)?`<span class="pill kcal">~${kcalOf(m)} kcal</span>`:''}
         </div>
         <div class="why">${m.why}</div>
         ${m.sub?`<div class="why" style="font-size:12.5px">💡 ${m.sub}</div>`:''}
@@ -439,6 +467,7 @@ function card(m,isLove){
         ${m.effort?`<span class="pill effort">${m.effort==='keine'?'kein Kochen':m.effort}</span>`:''}
         ${m.endoGentle?'<span class="pill gentle">🌸 sanft</span>':''}
         ${isLove?'<span class="pill tag">❤ von Samuel</span>':''}
+        ${state.showKcal&&kcalOf(m)?`<span class="pill kcal">~${kcalOf(m)} kcal</span>`:''}
       </div>
       <div class="why ${isLove?'lovewhy':''}">${m.why||''}</div>
       ${m.ing?`<details class="recipe"><summary>Zutaten & Zubereitung</summary>
@@ -470,14 +499,17 @@ function toggleDayPicker(id){const dp=document.getElementById('dp-'+id);
   DAYS.forEach(d=>{const b=document.createElement('button');b.textContent=d.slice(0,2);b.onclick=()=>{addToWeek(d,id);dp.style.display='none';};dp.appendChild(b);});
   dp.style.display='flex';}
 function addToWeek(day,id){const m=mealById(id);const slot=m.type||'mittag';
-  state.week[day][slot]={id,name:m.name,emoji:m.emoji||'🍽️',ing:m.ing||[]};save();renderWeek();renderShop();toast(`${m.name} → ${day}`);}
+  state.week[day][slot]={id,name:m.name,emoji:m.emoji||'🍽️',ing:m.ing||[],kcal:kcalOf(m)||0};save();renderWeek();renderShop();toast(`${m.name} → ${day}`);}
 
 function renderSOS(){document.getElementById('sosList').innerHTML=SOS.map((s,i)=>`<div class="sos-item"><span class="n">${i+1}</span><span>${s}</span></div>`).join('');}
 function renderWeek(){const el=document.getElementById('weekGrid');el.innerHTML='';let any=false;
-  DAYS.forEach(d=>{const day=document.createElement('div');day.className='day';let html='';
-    SLOTS.forEach(([s,lbl])=>{const e=state.week[d][s];if(e)any=true;
+  DAYS.forEach(d=>{const day=document.createElement('div');day.className='day';let html='';let total=0;
+    SLOTS.forEach(([s,lbl])=>{const e=state.week[d][s];if(e){any=true;total+=(e.kcal!=null?e.kcal:(kcalOf(mealById(e.id))||0));}
       html+=`<div class="slot"><span class="label">${lbl}</span><span class="meal-name ${e?'':'empty'}">${e?e.emoji+' '+e.name:'— noch nichts —'}</span>${e?`<button class="rm" data-d="${d}" data-s="${s}">✕</button>`:''}</div>`;});
-    day.innerHTML=`<h3>${d}</h3>${html}`;el.appendChild(day);});
+    let tot='';
+    if(state.showKcal&&total>0){let bar='';if(state.kcalGoal){const pct=Math.min(100,Math.round(total/state.kcalGoal*100));bar=`<div class="kbar"><i style="width:${pct}%"></i></div>`;}
+      tot=`<div class="daytotal">≈ <b>${total}</b> kcal${state.kcalGoal?` von ${state.kcalGoal}`:''}${bar}</div>`;}
+    day.innerHTML=`<h3>${d}</h3>${html}${tot}`;el.appendChild(day);});
   if(!any)el.innerHTML='<div class="empty-state"><span class="big">🗓️</span>Deine Woche ist leer. Wisch dich durch „Entdecken" oder tipp bei „Alle Gerichte" auf „zu meiner Woche".</div>';
   el.querySelectorAll('.rm').forEach(b=>b.onclick=()=>{delete state.week[b.dataset.d][b.dataset.s];save();renderWeek();renderShop();});}
 function renderShop(){const el=document.getElementById('shopList');const counts={};let total=0;
@@ -525,13 +557,16 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
 });
 document.getElementById('sosBtn').onclick=()=>document.getElementById('sosList').classList.toggle('show');
 document.getElementById('moreToggle').onclick=()=>{showAllMoods=!showAllMoods;renderMoods();};
-document.getElementById('clearWeek').onclick=()=>{if(confirm('Ganze Woche leeren?')){const l=state.liked;state=blank();state.liked=l;save();renderWeek();renderShop();}};
+document.getElementById('clearWeek').onclick=()=>{if(confirm('Ganze Woche leeren?')){const l=state.liked,sk=state.showKcal,kg=state.kcalGoal;state=blank();state.liked=l;state.showKcal=sk;state.kcalGoal=kg;save();renderWeek();renderShop();}};
+function syncKcalUI(){document.getElementById('kcalToggle').checked=!!state.showKcal;document.getElementById('kcalGoalWrap').style.display=state.showKcal?'flex':'none';document.getElementById('kcalGoal').value=state.kcalGoal||'';}
+document.getElementById('kcalToggle').onchange=e=>{state.showKcal=e.target.checked;save();syncKcalUI();renderDeck();renderLoveRow();renderGrid();renderWeek();};
+document.getElementById('kcalGoal').oninput=e=>{state.kcalGoal=e.target.value?+e.target.value:'';save();renderWeek();};
 document.getElementById('copyList').onclick=copyList;
 document.getElementById('resetChecks').onclick=()=>{state.checked={};save();renderShop();};
 
 let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2000);}
 
-renderTypes();renderMoods();renderSOS();renderLoveRow();renderGrid();renderWeek();renderShop();buildDeck();
+syncKcalUI();renderTypes();renderMoods();renderSOS();renderLoveRow();renderGrid();renderWeek();renderShop();buildDeck();
 </script>
 </body>
 </html>
