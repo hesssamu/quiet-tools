@@ -94,9 +94,7 @@
   </div>
 
   <div class="arrived">
-    <div class="greet">Es ist soweit</div>
     <h1>Ich bin gelandet. 🤍</h1>
-    <p style="font-size:18px;color:var(--soft);max-width:380px;margin:16px auto 0">Ich bin in Amsterdam und komme so schnell ich kann zu dir.</p>
   </div>
 </div>
 
@@ -120,42 +118,32 @@ function bucket(h){
   return'night';
 }
 const GREET={
-  morning:'Guten Morgen, Schönste 🤍',
-  midday:'Hey du, mitten am Tag 🤍',
-  afternoon:'Hallo Liebes ☀️',
-  evening:'Guten Abend, du 🌙',
-  night:'Na, noch wach? 🌙',
+  morning:'Guten Morgen 🤍',
+  midday:'Hallo 🤍',
+  afternoon:'Hallo 🤍',
+  evening:'Guten Abend 🤍',
+  night:'Gute Nacht 🌙',
 };
-/* time-aware care nudge shown first */
+/* time-aware reminder shown first (reminders FOR her, no promises) */
 const CARE={
-  morning:{em:'💧',tx:'Guten Morgen. Trink ein großes Glas Wasser, bevor der Tag dich schnappt.'},
-  midday:{em:'🌿',tx:'Kurze Pause: geh ein paar Schritte an die frische Luft, das tut dir gut.'},
-  afternoon:{em:'🚶‍♀️',tx:'Ein kleiner Spaziergang jetzt? Dein Körper und dein Kopf danken es dir.'},
-  evening:{em:'🔥',tx:'Mach es dir gemütlich. Wärmflasche bereit, Schultern locker.'},
-  night:{em:'🌙',tx:'Schlaf gut, Liebes. Ich zähl die Tage, bis ich dich wieder halte.'},
+  morning:{em:'💧',tx:'Trink ein großes Glas Wasser, bevor der Tag startet.'},
+  midday:{em:'🌿',tx:'Kurze Pause: ein paar Schritte an die frische Luft.'},
+  afternoon:{em:'🚶‍♀️',tx:'Vielleicht ein kleiner Spaziergang? Tut dem Kopf gut.'},
+  evening:{em:'🔥',tx:'Mach es dir gemütlich. Wärme tut gut, Schultern locker.'},
+  night:{em:'🌙',tx:'Genug für heute. Schlaf gut.'},
 };
-/* rotating little thoughts: mix of love + gentle care */
+/* gentle reminders for her, no promises, no words put in Samuel's mouth */
 const NOTES=[
-  {em:'💧',tx:'Hast du heute genug getrunken? Geh, hol dir ein Glas Wasser. Für mich.'},
-  {em:'🚶‍♀️',tx:'Zehn Minuten frische Luft können einen ganzen Tag drehen. Trau dich raus.'},
-  {em:'🫶',tx:'Ich denke gerade an dich. Genau jetzt, in diesem Moment.'},
-  {em:'🔥',tx:'Wenn dein Bauch zwickt: Wärme, ruhen, sanft zu dir sein. Du musst nichts leisten.'},
-  {em:'🌬️',tx:'Atme einmal ganz tief ein. Und langsam wieder aus. Nochmal. Gut so.'},
-  {em:'🍵',tx:'Mach dir was Warmes zu trinken und setz dich kurz nur für dich hin.'},
-  {em:'😴',tx:'Du darfst ruhen. Ausruhen ist nicht faul, es ist klug.'},
-  {em:'🥹',tx:'Ich freu mich so darauf, dich wiederzusehen, du hast keine Ahnung.'},
-  {em:'🌸',tx:'Iss heute etwas, das dir wirklich gut tut. Du hast es verdient.'},
-  {em:'✨',tx:'Egal wie der Tag ist, du machst meine Welt heller. Schon immer.'},
-  {em:'🤍',tx:'Streck dich einmal richtig durch. Schultern runter. So.'},
-  {em:'📿',tx:'Sei heute so sanft zu dir, wie du es zu allen anderen bist.'},
-  /* SAMUEL: deine eigenen Worte, edit/erweiter sie frei: */
-  {em:'🤍',tx:'Ich kann es kaum erwarten, dich wieder in den Arm zu nehmen.'},
-  {em:'🥹',tx:'Dein Lachen fehlt mir gerade am meisten.'},
-  {em:'✈️',tx:'Mit jeder Minute komme ich dir näher. Wortwörtlich, genau jetzt.'},
-  {em:'🌍',tx:'Egal wie weit weg ich gerade bin, du bist mein Zuhause.'},
-  {em:'🫶',tx:'Danke, dass es dich gibt. Ich sag es viel zu selten.'},
-  {em:'🏡',tx:'Bald wieder wir zwei, ganz normal, ganz nah. Darauf freu ich mich am meisten.'},
-  {em:'😌',tx:'Wenn ich an dich denke, wird alles ein bisschen leichter.'},
+  {em:'💧',tx:'Schon genug getrunken heute? Hol dir ein Glas Wasser.'},
+  {em:'🚶‍♀️',tx:'Zehn Minuten frische Luft können einen Tag drehen.'},
+  {em:'🌬️',tx:'Einmal tief ein, langsam wieder aus. Nochmal.'},
+  {em:'🔥',tx:'Wenn der Bauch zwickt: Wärme, ruhen, sanft zu dir sein.'},
+  {em:'🍵',tx:'Mach dir was Warmes und setz dich kurz nur für dich hin.'},
+  {em:'😴',tx:'Ausruhen ist nicht faul. Du darfst Pause machen.'},
+  {em:'🌸',tx:'Iss heute etwas, das dir wirklich gut tut.'},
+  {em:'🤍',tx:'Streck dich einmal richtig durch. Schultern runter.'},
+  {em:'📿',tx:'Sei heute so sanft zu dir, wie du es zu anderen bist.'},
+  /* SAMUEL: hier kannst du eigene, echte Zeilen in deinen Worten ergänzen. */
 ];
 
 function setNudge(o){document.getElementById('nEm').textContent=o.em;document.getElementById('nTx').textContent=o.tx;
@@ -195,10 +183,10 @@ function tick(){
   const sl=sleepsUntil();
   document.getElementById('sleeps').innerHTML=sl<=0?'Heute! 🤍':`noch <b>${sl}</b> mal schlafen`;
   const ms=TARGET-now;let st;
-  if(ms<2*3600000)st='Ich bin gleich da. 🤍';
-  else if(ms<24*3600000)st='Heute ist der Tag. Ich halte dich bald wieder.';
-  else if(ms<48*3600000)st='Fast. Nur noch einmal schlafen.';
-  else st='Ich bin unterwegs zu dir, jeden Moment ein Stück näher.';
+  if(ms<2*3600000)st='Fast gelandet.';
+  else if(ms<24*3600000)st='Ankunft heute.';
+  else if(ms<48*3600000)st='Ankunft morgen.';
+  else st='';
   document.getElementById('status').textContent=st;
 }
 
