@@ -26,7 +26,7 @@
   body.night .stars{opacity:1}
   .hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
   .heart{position:absolute;bottom:-40px;font-size:18px;opacity:0;animation:float linear infinite}
-  @keyframes float{0%{transform:translateY(0) scale(.7);opacity:0}10%{opacity:.7}90%{opacity:.6}100%{transform:translateY(-110vh) scale(1.1);opacity:0}}
+  @keyframes float{0%{transform:translateY(0) scale(.8);opacity:0}15%{opacity:.3}85%{opacity:.28}100%{transform:translateY(-108vh) scale(1);opacity:0}}
 
   .wrap{position:relative;z-index:2;max-width:560px;margin:0 auto;padding:46px 22px 60px;text-align:center;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
   .greet{font-size:15px;letter-spacing:.04em;color:var(--soft);margin-bottom:6px}
@@ -42,6 +42,7 @@
   .unit .l{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:7px}
   .sleeps{font-size:15px;color:var(--soft);margin:14px 0 2px}
   .sleeps b{font-family:var(--serif);font-size:18px}
+  .status{font-size:14.5px;color:var(--soft);margin-top:6px;min-height:18px;font-style:italic}
 
   .nudge{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 22px;margin:26px auto 0;max-width:420px;backdrop-filter:blur(6px);animation:rise .5s ease both}
   @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -81,6 +82,7 @@
       <div class="unit"><div class="n" id="s">–</div><div class="l">Sek</div></div>
     </div>
     <div class="sleeps" id="sleeps"></div>
+    <div class="status" id="status"></div>
 
     <div class="nudge" id="nudge">
       <div class="em" id="nEm">💧</div>
@@ -146,6 +148,14 @@ const NOTES=[
   {em:'✨',tx:'Egal wie der Tag ist, du machst meine Welt heller. Schon immer.'},
   {em:'🤍',tx:'Streck dich einmal richtig durch. Schultern runter. So.'},
   {em:'📿',tx:'Sei heute so sanft zu dir, wie du es zu allen anderen bist.'},
+  /* SAMUEL: deine eigenen Worte, edit/erweiter sie frei: */
+  {em:'🤍',tx:'Ich kann es kaum erwarten, dich wieder in den Arm zu nehmen.'},
+  {em:'🥹',tx:'Dein Lachen fehlt mir gerade am meisten.'},
+  {em:'✈️',tx:'Mit jeder Minute komme ich dir näher. Wortwörtlich, genau jetzt.'},
+  {em:'🌍',tx:'Egal wie weit weg ich gerade bin, du bist mein Zuhause.'},
+  {em:'🫶',tx:'Danke, dass es dich gibt. Ich sag es viel zu selten.'},
+  {em:'🏡',tx:'Bald wieder wir zwei, ganz normal, ganz nah. Darauf freu ich mich am meisten.'},
+  {em:'😌',tx:'Wenn ich an dich denke, wird alles ein bisschen leichter.'},
 ];
 
 function setNudge(o){document.getElementById('nEm').textContent=o.em;document.getElementById('nTx').textContent=o.tx;
@@ -184,19 +194,26 @@ function tick(){
   document.getElementById('s').textContent=String(s).padStart(2,'0');
   const sl=sleepsUntil();
   document.getElementById('sleeps').innerHTML=sl<=0?'Heute! 🤍':`noch <b>${sl}</b> mal schlafen`;
+  const ms=TARGET-now;let st;
+  if(ms<2*3600000)st='Ich bin gleich da. 🤍';
+  else if(ms<24*3600000)st='Heute ist der Tag. Ich halte dich bald wieder.';
+  else if(ms<48*3600000)st='Fast. Nur noch einmal schlafen.';
+  else st='Ich bin unterwegs zu dir, jeden Moment ein Stück näher.';
+  document.getElementById('status').textContent=st;
 }
 
 /* floating hearts */
 function spawnHearts(){
-  const box=document.getElementById('hearts');const emojis=['🤍','💛','🩷','✨','🌸'];
+  const box=document.getElementById('hearts');
   setInterval(()=>{
+    if(document.hidden)return;
     const h=document.createElement('div');h.className='heart';
-    h.textContent=emojis[Math.floor((Date.now()/97)%emojis.length)];
-    h.style.left=(5+ (Date.now()%90))+'%';
-    h.style.fontSize=(14+(Date.now()%16))+'px';
-    h.style.animationDuration=(7+(Date.now()%7))+'s';
-    box.appendChild(h);setTimeout(()=>h.remove(),14000);
-  },1300);
+    h.textContent='🤍';
+    h.style.left=(12+(Date.now()%76))+'%';
+    h.style.fontSize='13px';
+    h.style.animationDuration=(12+(Date.now()%5))+'s';
+    box.appendChild(h);setTimeout(()=>h.remove(),18000);
+  },7000);
 }
 /* stars for night */
 function stars(){
