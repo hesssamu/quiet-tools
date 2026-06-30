@@ -2,3 +2,5 @@
 _council/
 *.zip
 .DS_Store
+# countdown removed from the public site (kept locally, not published)
+countdown.html
